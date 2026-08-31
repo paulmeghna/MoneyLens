@@ -26,3 +26,7 @@ class Budget(db.Model):
     month = db.Column(db.Integer, nullable=False)
     year = db.Column(db.Integer, nullable=False)
     amount = db.Column(db.Float, nullable=False)    
+
+
+
+
