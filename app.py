@@ -1,244 +1,236 @@
-# ============================================================
-# IMPORTS
-# ============================================================
 
-# Flask:
-# Flask -> creates our web application
-# render_template -> loads HTML files from the templates folder
-# request -> reads data submitted by forms
 from flask import Flask, render_template, request
-
-# Import SQLAlchemy database object and User model
-from models import db, User
-
-# Import our application configuration
-from config import Config
-
-# Flask-Login:
-# LoginManager -> manages authentication
-# login_user -> logs a user in
-# login_required -> protects routes from unauthenticated users
-# current_user -> gives access to the currently logged-in user
-# logout_user -> logs the current user out
+from datetime import datetime
 from flask_login import (
     LoginManager,
     login_user,
     login_required,
     current_user,
-    logout_user
+    logout_user,
 )
-
-# Werkzeug security:
-# generate_password_hash -> securely hashes a password
-# check_password_hash -> checks a password against its stored hash
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from config import Config
+from models import db, User, Transaction
 
-# ============================================================
-# CREATE FLASK APPLICATION
-# ============================================================
 
-# Create the Flask application object
+# ------------------------------------------------------------
+# Application setup
+# ------------------------------------------------------------
+
 app = Flask(__name__)
-
-# Load configuration from the Config class
 app.config.from_object(Config)
 
-
-# ============================================================
-# INITIALIZE DATABASE
-# ============================================================
-
-# Connect SQLAlchemy with our Flask application
 db.init_app(app)
 
-
-# ============================================================
-# INITIALIZE FLASK-LOGIN
-# ============================================================
-
-# Create the single LoginManager object for the application
 login_manager = LoginManager()
-
-# Connect LoginManager with Flask
 login_manager.init_app(app)
-
-# If a user tries to access a protected page without logging in,
-# Flask-Login will send them to the /login route
 login_manager.login_view = "login"
 
 
-# ============================================================
-# USER LOADER
-# ============================================================
-
-# Flask-Login uses this function to reload a logged-in user
-# from the database using the user ID stored in the session.
 @login_manager.user_loader
 def load_user(user_id):
+    """Load the logged-in user from the database."""
     return db.session.get(User, int(user_id))
 
 
-# ============================================================
-# CREATE DATABASE TABLES
-# ============================================================
-
-# Create the database tables if they do not already exist.
-# This uses the database configuration from config.py.
+# Create database tables if they do not already exist.
 with app.app_context():
     db.create_all()
 
 
-# ============================================================
-# REGISTRATION ROUTE
-# ============================================================
+# ------------------------------------------------------------
+# Authentication routes
+# ------------------------------------------------------------
 
-# This route handles both:
-# GET  -> show the registration page
-# POST -> process the registration form
 @app.route("/register", methods=["GET", "POST"])
 def register():
-
-    # Check whether the registration form was submitted
     if request.method == "POST":
-
-        # Read values entered into the form
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
 
-        # --------------------------------------------------------
-        # CHECK FOR DUPLICATE EMAIL
-        # --------------------------------------------------------
-
-        # Check whether an account with this email already exists
         existing_user = User.query.filter_by(email=email).first()
 
-        # If the email is already registered, stop registration
         if existing_user:
             return "Email already registered."
 
-        # --------------------------------------------------------
-        # HASH PASSWORD
-        # --------------------------------------------------------
-
-        # Never store the user's plain-text password.
-        # Convert it into a secure password hash instead.
         password_hash = generate_password_hash(password)
 
-        # --------------------------------------------------------
-        # CREATE USER OBJECT
-        # --------------------------------------------------------
-
-        # Create a new User object using the submitted data
         user = User(
             name=name,
             email=email,
-            password_hash=password_hash
+            password_hash=password_hash,
         )
 
-        # Add the new user to the database session
         db.session.add(user)
-
-        # Permanently save the new user to the database
         db.session.commit()
 
-        # Temporary success response for our current testing stage
         return "Registration successful!"
 
-    # If the request is GET, show the registration page
     return render_template("register.html")
 
 
-# ============================================================
-# LOGIN ROUTE
-# ============================================================
-
-# This route handles:
-# GET  -> show the login page
-# POST -> process login credentials
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
-    # Check whether the login form was submitted
     if request.method == "POST":
-
-        # Read email and password from the form
         email = request.form["email"]
         password = request.form["password"]
 
-        # Find the user with the submitted email
         user = User.query.filter_by(email=email).first()
 
-        # Check:
-        # 1. A user with that email exists
-        # 2. The entered password matches the stored password hash
         if user and check_password_hash(user.password_hash, password):
-
-            # Create the authenticated login session
             login_user(user)
-
-            # Temporary success response for our testing stage
             return "Login successful!"
 
-        # Generic error message for invalid credentials
-        # We do not reveal whether the email exists.
         return "Invalid email or password."
 
-    # If the request is GET, show the login page
     return render_template("login.html")
 
 
-# ============================================================
-# HOME ROUTE
-# ============================================================
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return "Logged out successfully."
 
-# Public home page
+
+# ------------------------------------------------------------
+# Main pages
+# ------------------------------------------------------------
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ============================================================
-# PROTECTED DASHBOARD ROUTE
-# ============================================================
-
-# @login_required means only authenticated users
-# are allowed to access this page.
 @app.route("/dashboard")
 @login_required
 def dashboard():
-
-    # current_user represents the currently logged-in user
     return f"Welcome, {current_user.name}!"
 
 
-# ============================================================
-# LOGOUT ROUTE
-# ============================================================
+# ------------------------------------------------------------
+# Transaction routes
+# ------------------------------------------------------------
 
-# @login_required ensures only logged-in users can log out
-@app.route("/logout")
+@app.route("/transactions", methods=["GET", "POST"])
 @login_required
-def logout():
+def transactions():
+    if request.method == "POST":
+        print("POST REQUEST RECEIVED")
 
-    # End the current user's authenticated session
-    logout_user()
+        transaction_type = request.form["type"]
 
-    # Temporary response for our testing stage
-    return "Logged out successfully!"
+        try:
+            amount = float(request.form["amount"])
+        except ValueError:
+            return "Amount must be a valid number."
+
+        if amount <= 0:
+            return "Amount must be greater than 0."
+
+        category = request.form["category"]
+        description = request.form["description"]
+        date = datetime.strptime(
+            request.form["date"],
+            "%Y-%m-%d"
+        ).date()
+
+        transaction = Transaction(
+            user_id=current_user.id,
+            type=transaction_type,
+            amount=float(amount),
+            category=category,
+            description=description,
+            date=date,
+        )
+
+        db.session.add(transaction)
+        db.session.commit()
+
+    transactions = Transaction.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        "transactions.html",
+        transactions=transactions
+    )
+
+@app.route(
+    "/transactions/<int:transaction_id>/edit",
+    methods=["GET", "POST"]
+)
+@login_required
+def edit_transaction(transaction_id):
+    transaction = Transaction.query.filter_by(
+        id=transaction_id,
+        user_id=current_user.id
+    ).first()
+
+    if transaction is None:
+        return "Transaction not found."
+
+    if request.method == "POST":
+        transaction.type = request.form["type"]
+
+        try:
+            amount = float(request.form["amount"])
+        except ValueError:
+            return "Amount must be a valid number."
+
+        if amount <= 0:
+            return "Amount must be greater than 0."
+
+        transaction.amount = amount
+        transaction.category = request.form["category"]
+        transaction.description = request.form["description"]
+        try:
+            transaction.date = datetime.strptime(
+                request.form["date"],
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            return "Date must be valid."
+
+        db.session.commit()
+
+    return render_template("edit_transaction.html", transaction=transaction)
+
+@app.route(
+    "/transactions/<int:transaction_id>/delete",
+    methods=["POST"]
+)
+@login_required
+def delete_transaction(transaction_id):
+    transaction = Transaction.query.filter_by(
+        id=transaction_id,
+        user_id=current_user.id
+    ).first()
+
+    if transaction is None:
+        return "Transaction not found."
+
+    db.session.delete(transaction)
+    db.session.commit()
+
+    return render_template(
+        "transactions.html",
+        transactions=Transaction.query.filter_by(
+            user_id=current_user.id
+        ).all()
+    )
 
 
-# ============================================================
-# RUN THE APPLICATION
-# ============================================================
+# -----------------------------------------------------------——
+# Run application
+# ------------------------------------------------------------
 
-# This block runs only when app.py is executed directly.
 if __name__ == "__main__":
-
-    # Start the Flask development server
     app.run(
         debug=True,
         host="127.0.0.1",
-        port=5000
+        port=5000,
     )
+

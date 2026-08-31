@@ -1,0 +1,122 @@
+
+{% extends "base.html" %}
+
+{% block title %}Add Transaction - MoneyLens{% endblock %}
+
+{% block content %}
+
+<h2>Add Transaction</h2>
+
+<!--
+    This form collects all information required to create
+    a new income or expense transaction.
+
+    method="POST" sends the submitted data to Flask,
+    where we will validate it and save it to the database.
+-->
+
+<form method="POST" action="/transactions">
+
+    <!-- Select whether this transaction is income or expense -->
+    <label for="type">Type:</label>
+
+    <select id="type" name="type" required>
+        <option value="">Select type</option>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+    </select>
+
+    <br><br>
+
+
+    <!-- Amount of money involved in this transaction -->
+    <label for="amount">Amount:</label>
+
+    <input
+        type="number"
+        id="amount"
+        name="amount"
+        step="0.01"
+        min="0"
+        required
+    >
+
+    <br><br>
+
+
+    <!--
+        Category helps organize transactions,
+        for example: Food, Travel, Salary, Shopping, etc.
+    -->
+    <label for="category">Category:</label>
+
+    <input
+        type="text"
+        id="category"
+        name="category"
+        maxlength="50"
+        required
+    >
+
+    <br><br>
+
+
+    <!-- Optional information about the transaction -->
+    <label for="description">Description:</label>
+
+    <textarea
+        id="description"
+        name="description"
+        maxlength="200"
+    ></textarea>
+
+    <br><br>
+
+
+    <!-- Date on which the transaction occurred -->
+    <label for="date">Date:</label>
+
+    <input
+        type="date"
+        id="date"
+        name="date"
+        required
+    >
+
+    <br><br>
+
+
+    <!-- Submit the transaction data to the Flask backend -->
+    <button type="submit">Add Transaction</button>
+
+</form>
+
+<h3>My Transactions</h3>
+
+{% for transaction in transactions %}
+    <p>
+    
+        {{ transaction.type }} |
+        ₹{{ transaction.amount }} |
+        {{ transaction.category }} |
+        {{ transaction.description }} |
+        {{ transaction.date }}
+
+        <a href="/transactions/{{ transaction.id }}/edit">
+            Edit
+        </a>
+
+                <form method="POST" action="/transactions/{{ transaction.id }}/delete">
+            <button type="submit">Delete</button>
+        </form>
+
+                
+    </p>
+
+    
+{% else %}
+    <p>No transactions yet.</p>
+{% endfor %}
+
+{% endblock %}
+
