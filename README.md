@@ -99,3 +99,32 @@ Visit:
 ```text
 http://127.0.0.1:5000
 ```
+
+
+
+🔐 Security
+
+MoneyLens uses password hashing and authenticated sessions to protect user accounts.
+
+Sensitive configuration and local development files should not be committed to the repository.
+
+
+
+🔮 Future Improvements
+
+As development continues, MoneyLens will evolve toward a more complete personal finance management platform with:
+
+Expense tracking
+Income tracking
+Budget planning
+Financial dashboards
+Data visualization
+Financial insights
+Production-ready deployment
+
+
+👩‍💻 Author
+
+Meghna Paul
+
+This project is part of my learning journey in Python, web development, Git/GitHub, and software engineering.
