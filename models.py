@@ -21,13 +21,34 @@ class Transaction(db.Model):
     date = db.Column(db.Date, nullable=False)    
 
 class Budget(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    month = db.Column(db.Integer, nullable=False)
-    year = db.Column(db.Integer, nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    amount = db.Column(db.Float, nullable=False) 
 
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    month = db.Column(db.Integer, nullable=False)
+
+    year = db.Column(db.Integer, nullable=False)
+
+    category = db.Column(db.String(50), nullable=False)
+
+    amount = db.Column(db.Float, nullable=False)
+
+    # A user can have only one budget for
+    # a specific category in a specific month and year.
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "month",
+            "year",
+            "category",
+            name="unique_user_budget"
+        ),
+    )
 
 
 

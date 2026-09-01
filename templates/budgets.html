@@ -1,26 +1,130 @@
-<h1>My Budgets</h1>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<form method="POST">
-    <input type="text" name="category" placeholder="Category" required>
-    <input type="number" name="month" placeholder="Month (1-12)" min="1" max="12" required>
-    <input type="number" name="year" placeholder="Year" min="2020" required>
-    <input type="number" name="amount" placeholder="Amount" min="0.01" step="0.01" required>
-    <button type="submit">Add Budget</button>
-</form>
+    <title>MoneyLens Budgets</title>
+</head>
 
-{% for budget in budgets %}
-    <div class="budget-item">
-        <strong>{{ budget.category }}</strong>
-        <span>{{ budget.month }}/{{ budget.year }}</span>
-        <span>Budget: ₹{{ budget.amount }}</span>
-        <span>Spent: ₹{{ budget.spent }}</span>
-        <span>Remaining: ₹{{ budget.remaining }}</span>
-        <span>Status: {{ budget.status }}</span>
-        <a href="{{ url_for('edit_budget', budget_id=budget.id) }}">Edit</a>
+<body>
 
-        <form method="POST" action="{{ url_for('delete_budget', budget_id=budget.id) }}">
-            <button type="submit">Delete</button>
-        </form>
-    </div>
-{% endfor %}
+    <h1>My Budgets</h1>
+
+    <!-- Add a new budget -->
+    <form method="POST">
+
+        <input
+            type="text"
+            name="category"
+            placeholder="Category"
+            required
+        >
+
+        <input
+            type="number"
+            name="month"
+            placeholder="Month (1-12)"
+            min="1"
+            max="12"
+            required
+        >
+
+        <input
+            type="number"
+            name="year"
+            placeholder="Year"
+            min="2020"
+            required
+        >
+
+        <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            min="0.01"
+            step="0.01"
+            required
+        >
+
+        <button type="submit">Add Budget</button>
+
+    </form>
+
+    <hr>
+
+    <!-- Display only the budgets belonging to the logged-in user -->
+    {% for budget in budgets %}
+
+        <div class="budget-item">
+
+            <strong>{{ budget.category }}</strong>
+
+            <!-- Convert the numeric month into a readable month name -->
+            <span>
+                {% if budget.month == 1 %}
+                    January
+                {% elif budget.month == 2 %}
+                    February
+                {% elif budget.month == 3 %}
+                    March
+                {% elif budget.month == 4 %}
+                    April
+                {% elif budget.month == 5 %}
+                    May
+                {% elif budget.month == 6 %}
+                    June
+                {% elif budget.month == 7 %}
+                    July
+                {% elif budget.month == 8 %}
+                    August
+                {% elif budget.month == 9 %}
+                    September
+                {% elif budget.month == 10 %}
+                    October
+                {% elif budget.month == 11 %}
+                    November
+                {% elif budget.month == 12 %}
+                    December
+                {% endif %}
+
+                {{ budget.year }}
+            </span>
+
+            <span>
+                Budget: ₹{{ budget.amount }}
+            </span>
+
+            <span>
+                Spent: ₹{{ budget.spent }}
+            </span>
+
+            <span>
+                Remaining: ₹{{ budget.remaining }}
+            </span>
+
+            <span>
+                Status: {{ budget.status }}
+            </span>
+
+            <!-- Edit only the logged-in user's budget -->
+            <a href="{{ url_for('edit_budget', budget_id=budget.id) }}">
+                Edit
+            </a>
+
+            <!-- Delete only the logged-in user's budget -->
+            <form
+                method="POST"
+                action="{{ url_for('delete_budget', budget_id=budget.id) }}"
+            >
+                <button type="submit">Delete</button>
+            </form>
+
+        </div>
+
+    {% endfor %}
+
+</body>
+
+</html>

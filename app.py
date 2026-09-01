@@ -8,7 +8,9 @@ from flask_login import (
     current_user,
     logout_user,
 )
+from flask_migrate import Migrate
 from sqlalchemy import extract, func
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import Config
@@ -24,6 +26,9 @@ app.config.from_object(Config)
 
 # Connect SQLAlchemy to the Flask application.
 db.init_app(app)
+
+# Configure Flask-Migrate for safe database schema changes.
+migrate = Migrate(app, db)
 
 # Configure Flask-Login.
 login_manager = LoginManager()
@@ -163,7 +168,7 @@ def dashboard():
             extract("year", Transaction.date) == year
         )
 
-    # Year view: filter by the selected year only.
+    # Year view: filter by selected year only.
     elif view == "year":
         income_query = income_query.filter(
             extract("year", Transaction.date) == year
@@ -197,7 +202,7 @@ def dashboard():
     elif view == "all":
         pass
 
-    # Reject any unsupported dashboard view.
+    # Reject unsupported dashboard views.
     else:
         return "Invalid dashboard view."
 
@@ -250,7 +255,7 @@ def transactions():
         # Validate amount.
         try:
             amount = float(request.form.get("amount", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Amount must be a valid number."
 
         if amount <= 0:
@@ -262,7 +267,7 @@ def transactions():
                 request.form.get("date", ""),
                 "%Y-%m-%d"
             ).date()
-        except ValueError:
+        except (ValueError, TypeError):
             return "Date must be valid."
 
         # Create the transaction for the logged-in user.
@@ -326,7 +331,7 @@ def edit_transaction(transaction_id):
         # Validate amount.
         try:
             amount = float(request.form.get("amount", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Amount must be a valid number."
 
         if amount <= 0:
@@ -338,7 +343,7 @@ def edit_transaction(transaction_id):
                 request.form.get("date", ""),
                 "%Y-%m-%d"
             ).date()
-        except ValueError:
+        except (ValueError, TypeError):
             return "Date must be valid."
 
         # Update the existing transaction.
@@ -396,7 +401,7 @@ def budgets():
         # Validate month.
         try:
             month = int(request.form.get("month", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Month must be a valid number."
 
         if month < 1 or month > 12:
@@ -405,7 +410,7 @@ def budgets():
         # Validate year.
         try:
             year = int(request.form.get("year", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Year must be a valid number."
 
         if year < 2020:
@@ -414,7 +419,7 @@ def budgets():
         # Validate budget amount.
         try:
             amount = float(request.form.get("amount", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Amount must be a valid number."
 
         if amount <= 0:
@@ -430,7 +435,21 @@ def budgets():
         )
 
         db.session.add(budget)
-        db.session.commit()
+
+        try:
+            db.session.commit()
+
+        except IntegrityError:
+            # Roll back the failed transaction so the SQLAlchemy
+            # session can safely be used for the next request.
+            db.session.rollback()
+
+            # The Budget model has a unique constraint on
+            # user + category + month + year.
+            return (
+                "A budget already exists for this category, "
+                "month, and year."
+            ), 400
 
         # POST-Redirect-GET prevents duplicate budgets
         # when the browser page is refreshed.
@@ -505,7 +524,7 @@ def edit_budget(budget_id):
         # Validate month.
         try:
             month = int(request.form.get("month", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Month must be a valid number."
 
         if month < 1 or month > 12:
@@ -514,7 +533,7 @@ def edit_budget(budget_id):
         # Validate year.
         try:
             year = int(request.form.get("year", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Year must be a valid number."
 
         if year < 2020:
@@ -523,7 +542,7 @@ def edit_budget(budget_id):
         # Validate amount.
         try:
             amount = float(request.form.get("amount", ""))
-        except ValueError:
+        except (ValueError, TypeError):
             return "Amount must be a valid number."
 
         if amount <= 0:
@@ -535,7 +554,18 @@ def edit_budget(budget_id):
         budget.year = year
         budget.amount = amount
 
-        db.session.commit()
+        try:
+            db.session.commit()
+
+        except IntegrityError:
+            # Roll back the failed update so the database session
+            # remains usable.
+            db.session.rollback()
+
+            return (
+                "A budget already exists for this category, "
+                "month, and year."
+            ), 400
 
         return redirect("/budgets")
 
