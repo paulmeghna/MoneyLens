@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoneyLens Dashboard</title>
+    <title>MoneyLens Financial Dashboard</title>
 </head>
 
 <body>
 
-    <h1>MoneyLens Dashboard</h1>
+    <h1>MoneyLens Financial Dashboard</h1>
 
     <!-- Dashboard period selector -->
     <form method="GET" action="/dashboard">
@@ -32,6 +33,7 @@
         <!-- Show month selector only for Month view -->
         {% if view == "month" %}
             <label for="month">Month:</label>
+
             <select name="month" id="month">
                 <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
                 <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
@@ -51,6 +53,7 @@
         <!-- Show year selector for Month and Year views -->
         {% if view != "all" %}
             <label for="year">Year:</label>
+
             <input
                 type="number"
                 name="year"
@@ -95,4 +98,5 @@
     </script>
 
 </body>
+
 </html>
