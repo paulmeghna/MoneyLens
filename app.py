@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from datetime import datetime
 from flask_login import (
     LoginManager,
@@ -11,7 +11,7 @@ from flask_login import (
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import Config
-from models import db, User, Transaction
+from models import db, User, Transaction, Budget
 
 
 # ------------------------------------------------------------
@@ -81,7 +81,7 @@ def login():
 
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            return "Login successful!"
+            return redirect(request.args.get("next") or "/")
 
         return "Invalid email or password."
 
@@ -221,6 +221,141 @@ def delete_transaction(transaction_id):
             user_id=current_user.id
         ).all()
     )
+
+# Budgets Rout
+
+@app.route("/budgets", methods=["GET", "POST"])
+@login_required
+def budgets():
+    if request.method == "POST":
+        category = request.form["category"].strip()
+
+        if not category:
+            return "Category is required."
+
+        try:
+            month = int(request.form["month"])
+        except ValueError:
+            return "Month must be a valid number."
+
+        if month < 1 or month > 12:
+            return "Month must be between 1 and 12."
+
+        try:
+            year = int(request.form["year"])
+        except ValueError:
+            return "Year must be a valid number."
+
+        if year < 2020:
+            return "Year must be 2020 or later."
+
+        try:
+            amount = float(request.form["amount"])
+        except ValueError:
+            return "Amount must be a valid number."
+
+        if amount <= 0:
+            return "Amount must be greater than 0."
+
+        budget = Budget(
+            user_id=current_user.id,
+            month=month,
+            year=year,
+            category=category,
+            amount=amount
+        )
+
+        db.session.add(budget)
+        db.session.commit()
+
+    budgets = Budget.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        "budgets.html",
+        budgets=budgets
+    )
+
+
+@app.route("/budgets/<int:budget_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_budget(budget_id):
+    # Find the budget and make sure it belongs to the logged-in user.
+    budget = Budget.query.filter_by(
+        id=budget_id,
+        user_id=current_user.id
+    ).first()
+
+    # Do not allow access if the budget does not exist
+    # or belongs to another user.
+    if budget is None:
+        return "Budget not found."
+
+    if request.method == "POST":
+        category = request.form["category"].strip()
+
+        # Validate category
+        if not category:
+            return "Category is required."
+
+        # Validate month
+        try:
+            month = int(request.form["month"])
+        except ValueError:
+            return "Month must be a valid number."
+
+        if month < 1 or month > 12:
+            return "Month must be between 1 and 12."
+
+        # Validate year
+        try:
+            year = int(request.form["year"])
+        except ValueError:
+            return "Year must be a valid number."
+
+        if year < 2020:
+            return "Year must be 2020 or later."
+
+        # Validate amount
+        try:
+            amount = float(request.form["amount"])
+        except ValueError:
+            return "Amount must be a valid number."
+
+        if amount <= 0:
+            return "Amount must be greater than 0."
+
+        # Update the existing budget.
+        budget.category = category
+        budget.month = month
+        budget.year = year
+        budget.amount = amount
+
+        # Save the changes to the database.
+        db.session.commit()
+
+        return redirect("/budgets")
+
+    return render_template("edit_budget.html", budget=budget)
+
+
+@app.route("/budgets/<int:budget_id>/delete", methods=["POST"])
+@login_required
+def delete_budget(budget_id):
+    # Find the budget and make sure it belongs to the logged-in user.
+    budget = Budget.query.filter_by(
+        id=budget_id,
+        user_id=current_user.id
+    ).first()
+
+    if budget is None:
+        return "Budget not found."
+
+    db.session.delete(budget)
+    db.session.commit()
+
+    return redirect("/budgets")
 
 
 # -----------------------------------------------------------——

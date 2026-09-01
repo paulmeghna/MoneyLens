@@ -1,0 +1,9 @@
+<h1>Edit Budget</h1>
+
+<form method="POST">
+    <input type="text" name="category" value="{{ budget.category }}" required>
+    <input type="number" name="month" value="{{ budget.month }}" min="1" max="12" required>
+    <input type="number" name="year" value="{{ budget.year }}" min="2020" required>
+    <input type="number" name="amount" value="{{ budget.amount }}" min="0.01" step="0.01" required>
+    <button type="submit">Update Budget</button>
+</form>

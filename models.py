@@ -25,7 +25,8 @@ class Budget(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     month = db.Column(db.Integer, nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    amount = db.Column(db.Float, nullable=False)    
+    category = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, nullable=False) 
 
 
 
