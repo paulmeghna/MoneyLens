@@ -125,35 +125,74 @@ def home():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    # Calculate total income for the current month and year.
-    total_income = db.session.query(
-        func.sum(Transaction.amount)
-    ).filter(
+    view = request.args.get("view", "month")
+    month = request.args.get("month", datetime.now().month, type=int)
+    year = request.args.get("year", datetime.now().year, type=int)
+
+    if view == "month" and (month < 1 or month > 12):
+        return "Month must be between 1 and 12."
+    
+    if year < 2020:
+        return "Year must be 2020 or later."
+
+    # Start building the query for the logged-in user.
+    income_query = Transaction.query.filter(
         Transaction.user_id == current_user.id,
-        Transaction.type == "income",
-        extract("month", Transaction.date) == datetime.now().month,
-        extract("year", Transaction.date) == datetime.now().year
+        Transaction.type == "income"
+    )
+
+    expense_query = Transaction.query.filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense"
+    )
+
+    # Month view: filter by both selected month and selected year.
+    if view == "month":
+        income_query = income_query.filter(
+            extract("month", Transaction.date) == month,
+            extract("year", Transaction.date) == year
+        )
+
+        expense_query = expense_query.filter(
+            extract("month", Transaction.date) == month,
+            extract("year", Transaction.date) == year
+        )
+
+    # Year view: filter by selected year only.
+    elif view == "year":
+        income_query = income_query.filter(
+            extract("year", Transaction.date) == year
+        )
+
+        expense_query = expense_query.filter(
+            extract("year", Transaction.date) == year
+        )
+
+    # All Time view: no date filter is applied.
+    elif view == "all":
+        pass
+
+    else:
+        return "Invalid dashboard view."
+
+    total_income = income_query.with_entities(
+        func.sum(Transaction.amount)
     ).scalar() or 0
 
-    # Calculate total expense for the current month and year.
-    total_expense = db.session.query(
+    total_expense = expense_query.with_entities(
         func.sum(Transaction.amount)
-    ).filter(
-        Transaction.user_id == current_user.id,
-        Transaction.type == "expense",
-        extract("month", Transaction.date) == datetime.now().month,
-        extract("year", Transaction.date) == datetime.now().year
     ).scalar() or 0
 
-    # Calculate the current month's balance.
     balance = total_income - total_expense
 
-    # Display the dashboard using the HTML template.
     return render_template(
         "dashboard.html",
         total_income=total_income,
         total_expense=total_expense,
-        balance=balance
+        balance=balance,
+        view=view,
+        month=month,
+        year=year
     )
 
 

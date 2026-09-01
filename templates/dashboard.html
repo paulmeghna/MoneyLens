@@ -5,13 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneyLens Dashboard</title>
 </head>
+
 <body>
 
     <h1>MoneyLens Dashboard</h1>
 
-    <p>Total Income (This Month): ₹{{ total_income }}</p>
-    <p>Total Expense (This Month): ₹{{ total_expense }}</p>
-    <p>Balance (This Month): ₹{{ balance }}</p>
+    <!-- Dashboard period selector -->
+    <form method="GET" action="/dashboard">
+
+        <!-- Select dashboard view -->
+        <label for="view">View:</label>
+        <select name="view" id="view">
+            <option value="month" {% if view == "month" %}selected{% endif %}>
+                Month
+            </option>
+
+            <option value="year" {% if view == "year" %}selected{% endif %}>
+                Year
+            </option>
+
+            <option value="all" {% if view == "all" %}selected{% endif %}>
+                All Time
+            </option>
+        </select>
+
+        <!-- Show month selector only for Month view -->
+        {% if view == "month" %}
+            <label for="month">Month:</label>
+            <select name="month" id="month">
+                <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
+                <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
+                <option value="3" {% if month == 3 %}selected{% endif %}>March</option>
+                <option value="4" {% if month == 4 %}selected{% endif %}>April</option>
+                <option value="5" {% if month == 5 %}selected{% endif %}>May</option>
+                <option value="6" {% if month == 6 %}selected{% endif %}>June</option>
+                <option value="7" {% if month == 7 %}selected{% endif %}>July</option>
+                <option value="8" {% if month == 8 %}selected{% endif %}>August</option>
+                <option value="9" {% if month == 9 %}selected{% endif %}>September</option>
+                <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
+                <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
+                <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+            </select>
+        {% endif %}
+
+        <!-- Show year selector for Month and Year views -->
+        {% if view != "all" %}
+            <label for="year">Year:</label>
+            <input
+                type="number"
+                name="year"
+                id="year"
+                value="{{ year }}"
+                min="2020"
+            >
+        {% endif %}
+
+        <button type="submit">View</button>
+
+    </form>
+
+    <hr>
+
+    <!-- Dashboard results -->
+    {% if view == "month" %}
+
+        <p>Total Income (This Month): ₹{{ total_income }}</p>
+        <p>Total Expense (This Month): ₹{{ total_expense }}</p>
+        <p>Balance (This Month): ₹{{ balance }}</p>
+
+    {% elif view == "year" %}
+
+        <p>Total Income (This Year): ₹{{ total_income }}</p>
+        <p>Total Expense (This Year): ₹{{ total_expense }}</p>
+        <p>Balance (This Year): ₹{{ balance }}</p>
+
+    {% else %}
+
+        <p>Total Income (All Time): ₹{{ total_income }}</p>
+        <p>Total Expense (All Time): ₹{{ total_expense }}</p>
+        <p>Balance (All Time): ₹{{ balance }}</p>
+
+    {% endif %}
+
+    <!-- Automatically submit the form when the dashboard view changes -->
+    <script>
+        document.getElementById("view").addEventListener("change", function () {
+            this.form.submit();
+        });
+    </script>
 
 </body>
 </html>
