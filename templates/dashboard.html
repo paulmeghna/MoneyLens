@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MoneyLens Financial Dashboard</title>
 </head>
 
@@ -16,6 +17,7 @@
 
         <!-- Select dashboard view -->
         <label for="view">View:</label>
+
         <select name="view" id="view">
             <option value="month" {% if view == "month" %}selected{% endif %}>
                 Month
@@ -32,6 +34,7 @@
 
         <!-- Show month selector only for Month view -->
         {% if view == "month" %}
+
             <label for="month">Month:</label>
 
             <select name="month" id="month">
@@ -48,10 +51,12 @@
                 <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
                 <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
             </select>
+
         {% endif %}
 
         <!-- Show year selector for Month and Year views -->
         {% if view != "all" %}
+
             <label for="year">Year:</label>
 
             <input
@@ -61,6 +66,7 @@
                 value="{{ year }}"
                 min="2020"
             >
+
         {% endif %}
 
         <button type="submit">View</button>
@@ -81,6 +87,111 @@
         <p>Total Income (This Year): ₹{{ total_income }}</p>
         <p>Total Expense (This Year): ₹{{ total_expense }}</p>
         <p>Balance (This Year): ₹{{ balance }}</p>
+
+        <!-- Monthly breakdown for the selected year -->
+        <h2>Monthly Financial Breakdown</h2>
+
+        <table
+            border="1"
+            style="border-collapse: collapse; width: 100%;"
+        >
+            <thead>
+                <tr>
+                    <th
+                        style="
+                            border: 1px solid black;
+                            padding: 10px;
+                            text-align: left;
+                        "
+                    >
+                        Month
+                    </th>
+
+                    <th
+                        style="
+                            border: 1px solid black;
+                            padding: 10px;
+                            text-align: right;
+                        "
+                    >
+                        Income
+                    </th>
+
+                    <th
+                        style="
+                            border: 1px solid black;
+                            padding: 10px;
+                            text-align: right;
+                        "
+                    >
+                        Expense
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in monthly_breakdown %}
+
+                    <tr>
+
+                        <td
+                            style="
+                                border: 1px solid black;
+                                padding: 10px;
+                            "
+                        >
+                            {% if item.month == 1 %}
+                                January
+                            {% elif item.month == 2 %}
+                                February
+                            {% elif item.month == 3 %}
+                                March
+                            {% elif item.month == 4 %}
+                                April
+                            {% elif item.month == 5 %}
+                                May
+                            {% elif item.month == 6 %}
+                                June
+                            {% elif item.month == 7 %}
+                                July
+                            {% elif item.month == 8 %}
+                                August
+                            {% elif item.month == 9 %}
+                                September
+                            {% elif item.month == 10 %}
+                                October
+                            {% elif item.month == 11 %}
+                                November
+                            {% elif item.month == 12 %}
+                                December
+                            {% endif %}
+                        </td>
+
+                        <td
+                            style="
+                                border: 1px solid black;
+                                padding: 10px;
+                                text-align: right;
+                            "
+                        >
+                            ₹{{ item.income }}
+                        </td>
+
+                        <td
+                            style="
+                                border: 1px solid black;
+                                padding: 10px;
+                                text-align: right;
+                            "
+                        >
+                            ₹{{ item.expense }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
 
     {% else %}
 

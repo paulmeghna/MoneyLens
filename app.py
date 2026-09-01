@@ -129,13 +129,18 @@ def dashboard():
     month = request.args.get("month", datetime.now().month, type=int)
     year = request.args.get("year", datetime.now().year, type=int)
 
+    # Validate the selected month only when Month view is used.
     if view == "month" and (month < 1 or month > 12):
         return "Month must be between 1 and 12."
-    
-    if year < 2020:
+
+    # Validate the selected year for Month and Year views.
+    if view in ("month", "year") and year < 2020:
         return "Year must be 2020 or later."
 
-    # Start building the query for the logged-in user.
+    # This list will contain the 12-month breakdown for Year view.
+    monthly_breakdown = []
+
+    # Start with all transactions belonging to the logged-in user.
     income_query = Transaction.query.filter(
         Transaction.user_id == current_user.id,
         Transaction.type == "income"
@@ -146,7 +151,7 @@ def dashboard():
         Transaction.type == "expense"
     )
 
-    # Month view: filter by both selected month and selected year.
+    # Month view: filter by the selected month and year.
     if view == "month":
         income_query = income_query.filter(
             extract("month", Transaction.date) == month,
@@ -158,7 +163,7 @@ def dashboard():
             extract("year", Transaction.date) == year
         )
 
-    # Year view: filter by selected year only.
+    # Year view: filter by the selected year only.
     elif view == "year":
         income_query = income_query.filter(
             extract("year", Transaction.date) == year
@@ -168,23 +173,48 @@ def dashboard():
             extract("year", Transaction.date) == year
         )
 
+        # Calculate income and expense for each month of the selected year.
+        for selected_month in range(1, 13):
+            monthly_income = income_query.filter(
+                extract("month", Transaction.date) == selected_month
+            ).with_entities(
+                func.sum(Transaction.amount)
+            ).scalar() or 0
+
+            monthly_expense = expense_query.filter(
+                extract("month", Transaction.date) == selected_month
+            ).with_entities(
+                func.sum(Transaction.amount)
+            ).scalar() or 0
+
+            monthly_breakdown.append({
+                "month": selected_month,
+                "income": monthly_income,
+                "expense": monthly_expense
+            })
+
     # All Time view: no date filter is applied.
     elif view == "all":
         pass
 
+    # Reject any unsupported dashboard view.
     else:
         return "Invalid dashboard view."
 
+    # Calculate the total income for the selected view.
     total_income = income_query.with_entities(
         func.sum(Transaction.amount)
     ).scalar() or 0
 
+    # Calculate the total expense for the selected view.
     total_expense = expense_query.with_entities(
         func.sum(Transaction.amount)
     ).scalar() or 0
 
+    # Balance is income minus expense.
     balance = total_income - total_expense
 
+    # Send all calculated values to the dashboard template.
     return render_template(
         "dashboard.html",
         total_income=total_income,
@@ -192,7 +222,8 @@ def dashboard():
         balance=balance,
         view=view,
         month=month,
-        year=year
+        year=year,
+        monthly_breakdown=monthly_breakdown
     )
 
 
