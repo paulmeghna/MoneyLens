@@ -1,6 +1,6 @@
+from datetime import datetime
 
 from flask import Flask, render_template, request, redirect
-from datetime import datetime
 from flask_login import (
     LoginManager,
     login_user,
@@ -8,6 +8,7 @@ from flask_login import (
     current_user,
     logout_user,
 )
+from sqlalchemy import extract, func
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import Config
@@ -21,8 +22,10 @@ from models import db, User, Transaction, Budget
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Connect SQLAlchemy to the Flask application.
 db.init_app(app)
 
+# Configure Flask-Login.
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -46,15 +49,27 @@ with app.app_context():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form["name"]
-        email = request.form["email"]
-        password = request.form["password"]
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
+        # Validate required fields.
+        if not name:
+            return "Name is required."
+
+        if not email:
+            return "Email is required."
+
+        if not password:
+            return "Password is required."
+
+        # Prevent duplicate email registration.
         existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
             return "Email already registered."
 
+        # Hash the password before storing it.
         password_hash = generate_password_hash(password)
 
         user = User(
@@ -74,13 +89,16 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
         user = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
+
+            # Return the user to the page they originally requested,
+            # or to the home page if there was no protected page.
             return redirect(request.args.get("next") or "/")
 
         return "Invalid email or password."
@@ -118,39 +136,58 @@ def dashboard():
 @login_required
 def transactions():
     if request.method == "POST":
-        print("POST REQUEST RECEIVED")
+        transaction_type = request.form.get("type", "").strip().lower()
+        category = request.form.get("category", "").strip()
+        description = request.form.get("description", "").strip()
 
-        transaction_type = request.form["type"]
+        # Only these two transaction types are allowed.
+        if transaction_type not in ("income", "expense"):
+            return "Transaction type must be income or expense."
 
+        # Category is required.
+        if not category:
+            return "Category is required."
+
+        # Validate amount.
         try:
-            amount = float(request.form["amount"])
+            amount = float(request.form.get("amount", ""))
         except ValueError:
             return "Amount must be a valid number."
 
         if amount <= 0:
             return "Amount must be greater than 0."
 
-        category = request.form["category"]
-        description = request.form["description"]
-        date = datetime.strptime(
-            request.form["date"],
-            "%Y-%m-%d"
-        ).date()
+        # Validate transaction date.
+        try:
+            transaction_date = datetime.strptime(
+                request.form.get("date", ""),
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            return "Date must be valid."
 
+        # Create the transaction for the logged-in user.
         transaction = Transaction(
             user_id=current_user.id,
             type=transaction_type,
-            amount=float(amount),
+            amount=amount,
             category=category,
             description=description,
-            date=date,
+            date=transaction_date,
         )
 
         db.session.add(transaction)
         db.session.commit()
 
+        # POST-Redirect-GET prevents duplicate transactions
+        # when the user refreshes the browser.
+        return redirect("/transactions")
+
+    # Show only the logged-in user's transactions.
     transactions = Transaction.query.filter_by(
         user_id=current_user.id
+    ).order_by(
+        Transaction.date.desc()
     ).all()
 
     return render_template(
@@ -158,12 +195,14 @@ def transactions():
         transactions=transactions
     )
 
+
 @app.route(
     "/transactions/<int:transaction_id>/edit",
     methods=["GET", "POST"]
 )
 @login_required
 def edit_transaction(transaction_id):
+    # Find the transaction and verify ownership.
     transaction = Transaction.query.filter_by(
         id=transaction_id,
         user_id=current_user.id
@@ -173,30 +212,52 @@ def edit_transaction(transaction_id):
         return "Transaction not found."
 
     if request.method == "POST":
-        transaction.type = request.form["type"]
+        transaction_type = request.form.get("type", "").strip().lower()
+        category = request.form.get("category", "").strip()
+        description = request.form.get("description", "").strip()
 
+        # Validate transaction type.
+        if transaction_type not in ("income", "expense"):
+            return "Transaction type must be income or expense."
+
+        # Validate category.
+        if not category:
+            return "Category is required."
+
+        # Validate amount.
         try:
-            amount = float(request.form["amount"])
+            amount = float(request.form.get("amount", ""))
         except ValueError:
             return "Amount must be a valid number."
 
         if amount <= 0:
             return "Amount must be greater than 0."
 
-        transaction.amount = amount
-        transaction.category = request.form["category"]
-        transaction.description = request.form["description"]
+        # Validate date.
         try:
-            transaction.date = datetime.strptime(
-                request.form["date"],
+            transaction_date = datetime.strptime(
+                request.form.get("date", ""),
                 "%Y-%m-%d"
             ).date()
         except ValueError:
             return "Date must be valid."
 
+        # Update the existing transaction.
+        transaction.type = transaction_type
+        transaction.amount = amount
+        transaction.category = category
+        transaction.description = description
+        transaction.date = transaction_date
+
         db.session.commit()
 
-    return render_template("edit_transaction.html", transaction=transaction)
+        return redirect("/transactions")
+
+    return render_template(
+        "edit_transaction.html",
+        transaction=transaction
+    )
+
 
 @app.route(
     "/transactions/<int:transaction_id>/delete",
@@ -204,6 +265,7 @@ def edit_transaction(transaction_id):
 )
 @login_required
 def delete_transaction(transaction_id):
+    # Find the transaction and verify ownership.
     transaction = Transaction.query.filter_by(
         id=transaction_id,
         user_id=current_user.id
@@ -215,48 +277,51 @@ def delete_transaction(transaction_id):
     db.session.delete(transaction)
     db.session.commit()
 
-    return render_template(
-        "transactions.html",
-        transactions=Transaction.query.filter_by(
-            user_id=current_user.id
-        ).all()
-    )
+    return redirect("/transactions")
 
-# Budgets Rout
+
+# ------------------------------------------------------------
+# Budget routes
+# ------------------------------------------------------------
 
 @app.route("/budgets", methods=["GET", "POST"])
 @login_required
 def budgets():
     if request.method == "POST":
-        category = request.form["category"].strip()
+        category = request.form.get("category", "").strip()
 
+        # Validate category.
         if not category:
             return "Category is required."
 
+        # Validate month.
         try:
-            month = int(request.form["month"])
+            month = int(request.form.get("month", ""))
         except ValueError:
             return "Month must be a valid number."
 
         if month < 1 or month > 12:
             return "Month must be between 1 and 12."
 
+        # Validate year.
         try:
-            year = int(request.form["year"])
+            year = int(request.form.get("year", ""))
         except ValueError:
             return "Year must be a valid number."
 
         if year < 2020:
             return "Year must be 2020 or later."
 
+        # Validate budget amount.
         try:
-            amount = float(request.form["amount"])
+            amount = float(request.form.get("amount", ""))
         except ValueError:
             return "Amount must be a valid number."
 
         if amount <= 0:
             return "Amount must be greater than 0."
 
+        # Create a budget belonging to the logged-in user.
         budget = Budget(
             user_id=current_user.id,
             month=month,
@@ -268,9 +333,47 @@ def budgets():
         db.session.add(budget)
         db.session.commit()
 
+        # POST-Redirect-GET prevents duplicate budgets
+        # when the browser page is refreshed.
+        return redirect("/budgets")
+
+    # Get only budgets belonging to the logged-in user.
     budgets = Budget.query.filter_by(
         user_id=current_user.id
     ).all()
+
+    # Calculate spending information for every budget.
+    for budget in budgets:
+
+        # Sum only expense transactions that belong to:
+        # 1. the current user
+        # 2. the same category
+        # 3. the same month
+        # 4. the same year
+        spent = db.session.query(
+            func.sum(Transaction.amount)
+        ).filter(
+            Transaction.user_id == current_user.id,
+            Transaction.category == budget.category,
+            Transaction.type == "expense",
+            extract("month", Transaction.date) == budget.month,
+            extract("year", Transaction.date) == budget.year
+        ).scalar() or 0
+
+        # Calculate the amount still available.
+        remaining = budget.amount - spent
+
+        # Determine whether the budget has been exceeded.
+        if remaining < 0:
+            status = "Overspent"
+        else:
+            status = "Within Budget"
+
+        # These are calculated values only.
+        # They are not stored in the Budget database table.
+        budget.spent = spent
+        budget.remaining = remaining
+        budget.status = status
 
     return render_template(
         "budgets.html",
@@ -278,48 +381,49 @@ def budgets():
     )
 
 
-@app.route("/budgets/<int:budget_id>/edit", methods=["GET", "POST"])
+@app.route(
+    "/budgets/<int:budget_id>/edit",
+    methods=["GET", "POST"]
+)
 @login_required
 def edit_budget(budget_id):
-    # Find the budget and make sure it belongs to the logged-in user.
+    # Find the budget and verify ownership.
     budget = Budget.query.filter_by(
         id=budget_id,
         user_id=current_user.id
     ).first()
 
-    # Do not allow access if the budget does not exist
-    # or belongs to another user.
     if budget is None:
         return "Budget not found."
 
     if request.method == "POST":
-        category = request.form["category"].strip()
+        category = request.form.get("category", "").strip()
 
-        # Validate category
+        # Validate category.
         if not category:
             return "Category is required."
 
-        # Validate month
+        # Validate month.
         try:
-            month = int(request.form["month"])
+            month = int(request.form.get("month", ""))
         except ValueError:
             return "Month must be a valid number."
 
         if month < 1 or month > 12:
             return "Month must be between 1 and 12."
 
-        # Validate year
+        # Validate year.
         try:
-            year = int(request.form["year"])
+            year = int(request.form.get("year", ""))
         except ValueError:
             return "Year must be a valid number."
 
         if year < 2020:
             return "Year must be 2020 or later."
 
-        # Validate amount
+        # Validate amount.
         try:
-            amount = float(request.form["amount"])
+            amount = float(request.form.get("amount", ""))
         except ValueError:
             return "Amount must be a valid number."
 
@@ -332,18 +436,23 @@ def edit_budget(budget_id):
         budget.year = year
         budget.amount = amount
 
-        # Save the changes to the database.
         db.session.commit()
 
         return redirect("/budgets")
 
-    return render_template("edit_budget.html", budget=budget)
+    return render_template(
+        "edit_budget.html",
+        budget=budget
+    )
 
 
-@app.route("/budgets/<int:budget_id>/delete", methods=["POST"])
+@app.route(
+    "/budgets/<int:budget_id>/delete",
+    methods=["POST"]
+)
 @login_required
 def delete_budget(budget_id):
-    # Find the budget and make sure it belongs to the logged-in user.
+    # Find the budget and verify ownership.
     budget = Budget.query.filter_by(
         id=budget_id,
         user_id=current_user.id
@@ -358,7 +467,7 @@ def delete_budget(budget_id):
     return redirect("/budgets")
 
 
-# -----------------------------------------------------------——
+# ------------------------------------------------------------
 # Run application
 # ------------------------------------------------------------
 
@@ -368,4 +477,3 @@ if __name__ == "__main__":
         host="127.0.0.1",
         port=5000,
     )
-
