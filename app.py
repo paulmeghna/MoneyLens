@@ -125,7 +125,36 @@ def home():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return f"Welcome, {current_user.name}!"
+    # Calculate total income for the current month and year.
+    total_income = db.session.query(
+        func.sum(Transaction.amount)
+    ).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "income",
+        extract("month", Transaction.date) == datetime.now().month,
+        extract("year", Transaction.date) == datetime.now().year
+    ).scalar() or 0
+
+    # Calculate total expense for the current month and year.
+    total_expense = db.session.query(
+        func.sum(Transaction.amount)
+    ).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense",
+        extract("month", Transaction.date) == datetime.now().month,
+        extract("year", Transaction.date) == datetime.now().year
+    ).scalar() or 0
+
+    # Calculate the current month's balance.
+    balance = total_income - total_expense
+
+    # Display the dashboard using the HTML template.
+    return render_template(
+        "dashboard.html",
+        total_income=total_income,
+        total_expense=total_expense,
+        balance=balance
+    )
 
 
 # ------------------------------------------------------------
