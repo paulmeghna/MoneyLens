@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>MoneyLens Financial Dashboard</title>
+
 </head>
 
 <body>
@@ -19,6 +23,7 @@
         <label for="view">View:</label>
 
         <select name="view" id="view">
+
             <option value="month" {% if view == "month" %}selected{% endif %}>
                 Month
             </option>
@@ -30,6 +35,7 @@
             <option value="all" {% if view == "all" %}selected{% endif %}>
                 All Time
             </option>
+
         </select>
 
         <!-- Show month selector only for Month view -->
@@ -38,6 +44,7 @@
             <label for="month">Month:</label>
 
             <select name="month" id="month">
+
                 <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
                 <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
                 <option value="3" {% if month == 3 %}selected{% endif %}>March</option>
@@ -50,6 +57,7 @@
                 <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
                 <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
                 <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+
             </select>
 
         {% endif %}
@@ -76,17 +84,52 @@
     <hr>
 
     <!-- Dashboard results -->
+
     {% if view == "month" %}
 
+        <!-- Monthly financial summary -->
         <p>Total Income (This Month): ₹{{ total_income }}</p>
         <p>Total Expense (This Month): ₹{{ total_expense }}</p>
         <p>Balance (This Month): ₹{{ balance }}</p>
+        <p>Savings (This Month): ₹{{ savings }}</p>
+        <p>Savings Rate (This Month): {{ "%.2f"|format(savings_rate) }}%</p>
+
+        <!-- Expense analytics -->
+        <h2>Expense by Category</h2>
+
+        <p>
+            Top Expense Category:
+            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
+        </p>
+
+        {% for category, amount in category_expenses %}
+
+            <p>{{ category }}: ₹{{ amount }}</p>
+
+        {% endfor %}
 
     {% elif view == "year" %}
 
+        <!-- Yearly financial summary -->
         <p>Total Income (This Year): ₹{{ total_income }}</p>
         <p>Total Expense (This Year): ₹{{ total_expense }}</p>
         <p>Balance (This Year): ₹{{ balance }}</p>
+        <p>Savings (This Year): ₹{{ savings }}</p>
+        <p>Savings Rate (This Year): {{ "%.2f"|format(savings_rate) }}%</p>
+
+        <!-- Expense analytics -->
+        <h2>Expense by Category</h2>
+
+        <p>
+            Top Expense Category:
+            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
+        </p>
+
+        {% for category, amount in category_expenses %}
+
+            <p>{{ category }}: ₹{{ amount }}</p>
+
+        {% endfor %}
 
         <!-- Monthly breakdown for the selected year -->
         <h2>Monthly Financial Breakdown</h2>
@@ -95,8 +138,11 @@
             border="1"
             style="border-collapse: collapse; width: 100%;"
         >
+
             <thead>
+
                 <tr>
+
                     <th
                         style="
                             border: 1px solid black;
@@ -126,10 +172,13 @@
                     >
                         Expense
                     </th>
+
                 </tr>
+
             </thead>
 
             <tbody>
+
                 {% for item in monthly_breakdown %}
 
                     <tr>
@@ -140,6 +189,7 @@
                                 padding: 10px;
                             "
                         >
+
                             {% if item.month == 1 %}
                                 January
                             {% elif item.month == 2 %}
@@ -165,6 +215,7 @@
                             {% elif item.month == 12 %}
                                 December
                             {% endif %}
+
                         </td>
 
                         <td
@@ -190,24 +241,46 @@
                     </tr>
 
                 {% endfor %}
+
             </tbody>
+
         </table>
 
     {% else %}
 
+        <!-- All-time financial summary -->
         <p>Total Income (All Time): ₹{{ total_income }}</p>
         <p>Total Expense (All Time): ₹{{ total_expense }}</p>
         <p>Balance (All Time): ₹{{ balance }}</p>
+        <p>Savings (All Time): ₹{{ savings }}</p>
+        <p>Savings Rate (All Time): {{ "%.2f"|format(savings_rate) }}%</p>
+
+        <!-- Expense analytics -->
+        <h2>Expense by Category</h2>
+
+        <p>
+            Top Expense Category:
+            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
+        </p>
+
+        {% for category, amount in category_expenses %}
+
+            <p>{{ category }}: ₹{{ amount }}</p>
+
+        {% endfor %}
 
     {% endif %}
 
     <!-- Automatically submit the form when the dashboard view changes -->
     <script>
+
         document.getElementById("view").addEventListener("change", function () {
             this.form.submit();
         });
+
     </script>
 
 </body>
 
 </html>
+
