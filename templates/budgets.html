@@ -103,6 +103,9 @@
             <span>
                 Remaining: ₹{{ budget.remaining }}
             </span>
+            <span>
+                Utilization: {{ "%.0f"|format(budget.utilization) }}%
+            </span>
 
             <span>
                 Status: {{ budget.status }}

@@ -480,6 +480,7 @@ def budgets():
 
         # Calculate the amount still available.
         remaining = budget.amount - spent
+        utilization = (spent / budget.amount) * 100
 
         # Determine whether the budget has been exceeded.
         if remaining < 0:
@@ -491,6 +492,7 @@ def budgets():
         # They are not stored in the Budget database table.
         budget.spent = spent
         budget.remaining = remaining
+        budget.utilization = utilization
         budget.status = status
 
     return render_template(
