@@ -1,122 +1,280 @@
-
 {% extends "base.html" %}
 
-{% block title %}Add Transaction - MoneyLens{% endblock %}
+{% block title %}Transactions - MoneyLens{% endblock %}
 
 {% block content %}
 
-<h2>Add Transaction</h2>
+<!-- ============================================================
+     MoneyLens Transactions Page
+     ============================================================ -->
 
-<!--
-    This form collects all information required to create
-    a new income or expense transaction.
+<div class="transaction-page">
 
-    method="POST" sends the submitted data to Flask,
-    where we will validate it and save it to the database.
--->
+    <!-- ========================================================
+         Add Transaction
+         ======================================================== -->
 
-<form method="POST" action="/transactions">
+    <div class="transaction-form-card">
 
-    <!-- Select whether this transaction is income or expense -->
-    <label for="type">Type:</label>
+        <h2>
+            Add Transaction
+        </h2>
 
-    <select id="type" name="type" required>
-        <option value="">Select type</option>
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-    </select>
+        <p class="form-subtitle">
+            Record your income or expense.
+        </p>
 
-    <br><br>
+        <!--
+            This form collects all information required to create
+            a new income or expense transaction.
 
+            The Flask backend validates the submitted data
+            and saves it for the currently logged-in user.
+        -->
 
-    <!-- Amount of money involved in this transaction -->
-    <label for="amount">Amount:</label>
+        <form
+            method="POST"
+            action="{{ url_for('transactions') }}"
+        >
 
-    <input
-        type="number"
-        id="amount"
-        name="amount"
-        step="0.01"
-        min="0"
-        required
-    >
+            <!-- Transaction type -->
+            <div class="form-group">
 
-    <br><br>
+                <label for="type">
+                    Type
+                </label>
 
+                <select
+                    id="type"
+                    name="type"
+                    required
+                >
 
-    <!--
-        Category helps organize transactions,
-        for example: Food, Travel, Salary, Shopping, etc.
-    -->
-    <label for="category">Category:</label>
+                    <option value="">
+                        Select type
+                    </option>
 
-    <input
-        type="text"
-        id="category"
-        name="category"
-        maxlength="50"
-        required
-    >
+                    <option value="income">
+                        Income
+                    </option>
 
-    <br><br>
+                    <option value="expense">
+                        Expense
+                    </option>
 
+                </select>
 
-    <!-- Optional information about the transaction -->
-    <label for="description">Description:</label>
-
-    <textarea
-        id="description"
-        name="description"
-        maxlength="200"
-    ></textarea>
-
-    <br><br>
+            </div>
 
 
-    <!-- Date on which the transaction occurred -->
-    <label for="date">Date:</label>
+            <!-- Transaction amount -->
+            <div class="form-group">
 
-    <input
-        type="date"
-        id="date"
-        name="date"
-        required
-    >
+                <label for="amount">
+                    Amount
+                </label>
 
-    <br><br>
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    step="0.01"
+                    min="0.01"
+                    placeholder="Enter amount"
+                    required
+                >
+
+            </div>
 
 
-    <!-- Submit the transaction data to the Flask backend -->
-    <button type="submit">Add Transaction</button>
+            <!-- Transaction category -->
+            <div class="form-group">
 
-</form>
+                <label for="category">
+                    Category
+                </label>
 
-<h3>My Transactions</h3>
+                <input
+                    type="text"
+                    id="category"
+                    name="category"
+                    maxlength="50"
+                    placeholder="Food, Salary, Shopping..."
+                    required
+                >
 
-{% for transaction in transactions %}
-    <p>
-    
-        {{ transaction.type }} |
-        ₹{{ transaction.amount }} |
-        {{ transaction.category }} |
-        {{ transaction.description }} |
-        {{ transaction.date }}
+            </div>
 
-        <a href="/transactions/{{ transaction.id }}/edit">
-            Edit
-        </a>
 
-                <form method="POST" action="/transactions/{{ transaction.id }}/delete">
-            <button type="submit">Delete</button>
+            <!-- Optional transaction description -->
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    maxlength="200"
+                    placeholder="Add a short description"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Transaction date -->
+            <div class="form-group">
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Submit transaction -->
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                Add Transaction
+            </button>
+
         </form>
 
-                
-    </p>
+    </div>
 
-    
-{% else %}
-    <p>No transactions yet.</p>
-{% endfor %}
+
+    <!-- ========================================================
+         Transaction List
+         ======================================================== -->
+
+    <div class="transaction-list-section">
+
+        <h2>
+            My Transactions
+        </h2>
+
+
+        {% for transaction in transactions %}
+
+            <div class="transaction-card">
+
+                <!-- Transaction information -->
+                <div class="transaction-info">
+
+                    <div class="transaction-main">
+
+                        <h3>
+                            {{ transaction.category }}
+                        </h3>
+
+                        <span
+                            class="transaction-type
+                            {% if transaction.type == 'income' %}
+                                income-type
+                            {% else %}
+                                expense-type
+                            {% endif %}"
+                        >
+                            {{ transaction.type|capitalize }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Description -->
+                    <p class="transaction-description">
+
+                        {% if transaction.description %}
+
+                            {{ transaction.description }}
+
+                        {% else %}
+
+                            No description
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- Date -->
+                    <p class="transaction-date">
+                        {{ transaction.date }}
+                    </p>
+
+                </div>
+
+
+                <!-- Transaction amount -->
+                <div class="transaction-amount">
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(transaction.amount) }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Transaction actions -->
+                <div class="transaction-actions">
+
+                    <!-- Edit transaction -->
+                    <a
+                        href="{{ url_for('edit_transaction', transaction_id=transaction.id) }}"
+                        class="edit-button"
+                    >
+                        Edit
+                    </a>
+
+
+                    <!-- Delete transaction -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="delete-button"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <!-- Empty state -->
+            <div class="empty-state">
+
+                <h3>
+                    No transactions yet
+                </h3>
+
+                <p>
+                    Add your first income or expense above.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
 {% endblock %}
-

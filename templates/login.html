@@ -4,22 +4,134 @@
 
 {% block content %}
 
-<h2>Login to MoneyLens</h2>
+<div class="auth-page">
 
-<form method="POST">
+    <div class="auth-card">
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+        <!-- MoneyLens authentication branding -->
+        <div class="auth-brand">
 
-    <br><br>
+            <div
+                class="auth-logo"
+                aria-label="MoneyLens logo"
+            >
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+                <svg
+                    viewBox="0 0 64 64"
+                    role="img"
+                    aria-hidden="true"
+                >
 
-    <br><br>
+                    <!-- Outer lens -->
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="5"
+                    />
 
-    <button type="submit">Login</button>
+                    <!-- Coin center -->
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="10"
+                        fill="currentColor"
+                        opacity="0.18"
+                    />
 
-</form>
+                    <!-- Financial growth line -->
+                    <path
+                        d="M18 35 L26 27 L32 32 L43 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <!-- Arrow head -->
+                    <path
+                        d="M37 20 H43 V26"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <h1>Welcome to MoneyLens</h1>
+
+            <p>
+                See your money clearly.
+            </p>
+
+        </div>
+
+
+        <h2>Login</h2>
+
+        <p class="auth-subtitle">
+            Sign in to manage your finances.
+        </p>
+
+
+        <!-- Login form -->
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button auth-button"
+            >
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

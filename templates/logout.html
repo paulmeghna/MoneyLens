@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Logged Out - MoneyLens{% endblock %}
+
+{% block content %}
+
+<div class="logout-page">
+
+    <div class="logout-card">
+
+        <div class="logout-logo">
+
+            <svg
+                viewBox="0 0 64 64"
+                role="img"
+                aria-hidden="true"
+            >
+
+                <circle
+                    cx="29"
+                    cy="29"
+                    r="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="5"
+                />
+
+                <circle
+                    cx="29"
+                    cy="29"
+                    r="10"
+                    fill="currentColor"
+                    opacity="0.18"
+                />
+
+                <path
+                    d="M18 35 L26 27 L32 32 L43 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+
+                <path
+                    d="M37 20 H43 V26"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                />
+
+            </svg>
+
+        </div>
+
+        <h1>You've been logged out</h1>
+
+        <p>
+            Your MoneyLens session has ended securely.
+        </p>
+
+        <a
+            href="{{ url_for('login') }}"
+            class="primary-button logout-login-button"
+        >
+            Log In Again
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

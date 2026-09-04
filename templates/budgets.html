@@ -1,133 +1,354 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}MoneyLens Budgets{% endblock %}
 
-    <title>MoneyLens Budgets</title>
-</head>
+{% block content %}
 
-<body>
+<div class="budget-page">
 
-    <h1>My Budgets</h1>
+    <!-- =====================================================
+         Page Header
+         ===================================================== -->
 
-    <!-- Add a new budget -->
-    <form method="POST">
+    <div class="budget-page-header">
 
-        <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            required
-        >
+        <h1>My Budgets</h1>
 
-        <input
-            type="number"
-            name="month"
-            placeholder="Month (1-12)"
-            min="1"
-            max="12"
-            required
-        >
+        <p>
+            Plan your spending and keep track of your limits.
+        </p>
 
-        <input
-            type="number"
-            name="year"
-            placeholder="Year"
-            min="2020"
-            required
-        >
+    </div>
 
-        <input
-            type="number"
-            name="amount"
-            placeholder="Amount"
-            min="0.01"
-            step="0.01"
-            required
-        >
 
-        <button type="submit">Add Budget</button>
+    <!-- =====================================================
+         Add Budget
+         ===================================================== -->
 
-    </form>
+    <section class="budget-form-card">
 
-    <hr>
+        <h2>Add New Budget</h2>
 
-    <!-- Display only the budgets belonging to the logged-in user -->
-    {% for budget in budgets %}
+        <form method="POST">
 
-        <div class="budget-item">
+            <div class="budget-form-group">
 
-            <strong>{{ budget.category }}</strong>
+                <label for="category">
+                    Category
+                </label>
 
-            <!-- Convert the numeric month into a readable month name -->
-            <span>
-                {% if budget.month == 1 %}
-                    January
-                {% elif budget.month == 2 %}
-                    February
-                {% elif budget.month == 3 %}
-                    March
-                {% elif budget.month == 4 %}
-                    April
-                {% elif budget.month == 5 %}
-                    May
-                {% elif budget.month == 6 %}
-                    June
-                {% elif budget.month == 7 %}
-                    July
-                {% elif budget.month == 8 %}
-                    August
-                {% elif budget.month == 9 %}
-                    September
-                {% elif budget.month == 10 %}
-                    October
-                {% elif budget.month == 11 %}
-                    November
-                {% elif budget.month == 12 %}
-                    December
-                {% endif %}
+                <input
+                    id="category"
+                    type="text"
+                    name="category"
+                    placeholder="e.g. Food, Shopping"
+                    required
+                >
 
-                {{ budget.year }}
-            </span>
+            </div>
 
-            <span>
-                Budget: ₹{{ budget.amount }}
-            </span>
 
-            <span>
-                Spent: ₹{{ budget.spent }}
-            </span>
+            <div class="budget-form-group">
 
-            <span>
-                Remaining: ₹{{ budget.remaining }}
-            </span>
-            <span>
-                Utilization: {{ "%.0f"|format(budget.utilization) }}%
-            </span>
+                <label for="month">
+                    Month
+                </label>
 
-            <span>
-                Status: {{ budget.status }}
-            </span>
+                <input
+                    id="month"
+                    type="number"
+                    name="month"
+                    placeholder="1-12"
+                    min="1"
+                    max="12"
+                    required
+                >
 
-            <!-- Edit only the logged-in user's budget -->
-            <a href="{{ url_for('edit_budget', budget_id=budget.id) }}">
-                Edit
-            </a>
+            </div>
 
-            <!-- Delete only the logged-in user's budget -->
-            <form
-                method="POST"
-                action="{{ url_for('delete_budget', budget_id=budget.id) }}"
+
+            <div class="budget-form-group">
+
+                <label for="year">
+                    Year
+                </label>
+
+                <input
+                    id="year"
+                    type="number"
+                    name="year"
+                    placeholder="2026"
+                    min="2020"
+                    required
+                >
+
+            </div>
+
+
+            <div class="budget-form-group">
+
+                <label for="amount">
+                    Budget Amount
+                </label>
+
+                <input
+                    id="amount"
+                    type="number"
+                    name="amount"
+                    placeholder="e.g. 2500"
+                    min="0.01"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button"
             >
-                <button type="submit">Delete</button>
-            </form>
+                Add Budget
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         Existing Budgets
+         ===================================================== -->
+
+    <section class="budget-list-section">
+
+        <div class="budget-list-header">
+
+            <h2>Your Budgets</h2>
 
         </div>
 
-    {% endfor %}
 
-</body>
+        {% if budgets %}
 
-</html>
+            <div class="budget-list">
+
+                {% for budget in budgets %}
+
+                    {% if budget.status == "Overspent" %}
+
+                        {% set status_class = "budget-status-danger" %}
+                        {% set progress_class = "budget-progress-danger" %}
+
+                    {% elif budget.status == "Near Limit" %}
+
+                        {% set status_class = "budget-status-warning" %}
+                        {% set progress_class = "budget-progress-warning" %}
+
+                    {% else %}
+
+                        {% set status_class = "budget-status-safe" %}
+                        {% set progress_class = "budget-progress-safe" %}
+
+                    {% endif %}
+
+
+                    <article class="budget-item">
+
+                        <!-- =================================================
+                             Budget Header
+                             ================================================= -->
+
+                        <div class="budget-item-header">
+
+                            <div>
+
+                                <h3>
+                                    {{ budget.category }}
+                                </h3>
+
+
+                                <p class="budget-period">
+
+                                    {% if budget.month == 1 %}
+                                        January
+                                    {% elif budget.month == 2 %}
+                                        February
+                                    {% elif budget.month == 3 %}
+                                        March
+                                    {% elif budget.month == 4 %}
+                                        April
+                                    {% elif budget.month == 5 %}
+                                        May
+                                    {% elif budget.month == 6 %}
+                                        June
+                                    {% elif budget.month == 7 %}
+                                        July
+                                    {% elif budget.month == 8 %}
+                                        August
+                                    {% elif budget.month == 9 %}
+                                        September
+                                    {% elif budget.month == 10 %}
+                                        October
+                                    {% elif budget.month == 11 %}
+                                        November
+                                    {% elif budget.month == 12 %}
+                                        December
+                                    {% endif %}
+
+                                    {{ budget.year }}
+
+                                </p>
+
+                            </div>
+
+
+                            <!-- Budget Status -->
+
+                            <span class="budget-status {{ status_class }}">
+                                {{ budget.status }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             Financial Information
+                             ================================================= -->
+
+                        <div class="budget-details">
+
+                            <div class="budget-detail">
+
+                                <span class="budget-detail-label">
+                                    Budget
+                                </span>
+
+                                <strong>
+                                    ₹{{ budget.amount }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="budget-detail">
+
+                                <span class="budget-detail-label">
+                                    Spent
+                                </span>
+
+                                <strong>
+                                    ₹{{ budget.spent }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="budget-detail">
+
+                                <span class="budget-detail-label">
+                                    Remaining
+                                </span>
+
+                                <strong>
+                                    ₹{{ budget.remaining }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             Budget Usage Visualization
+                             ================================================= -->
+
+                        <div class="budget-progress">
+
+                            <div class="budget-progress-label">
+
+                                <span>
+                                    Budget Usage
+                                </span>
+
+                                <strong>
+                                    {{ "%.0f"|format(budget.utilization) }}%
+                                </strong>
+
+                            </div>
+
+
+                            <progress
+                                class="budget-progress-bar {{ progress_class }}"
+                                value="{{ budget.utilization }}"
+                                max="100"
+                            >
+                                {{ "%.0f"|format(budget.utilization) }}%
+                            </progress>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             Budget Actions
+                             ================================================= -->
+
+                        <div class="budget-actions">
+
+                            <a
+                                href="{{ url_for('edit_budget', budget_id=budget.id) }}"
+                                class="edit-button"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('delete_budget', budget_id=budget.id) }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-button"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- =================================================
+                 Empty State
+                 ================================================= -->
+
+            <div class="empty-state">
+
+                <h3>
+                    No budgets yet
+                </h3>
+
+                <p>
+                    Create your first budget above to start
+                    tracking your spending.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,286 +1,690 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
+{% block title %}Financial Dashboard - MoneyLens{% endblock %}
 
-<html lang="en">
+{% block content %}
 
-<head>
+<!-- =========================================================
+     MoneyLens Financial Dashboard
+     ========================================================= -->
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="dashboard-page">
 
-    <title>MoneyLens Financial Dashboard</title>
+    <!-- =====================================================
+         Dashboard Heading
+         ===================================================== -->
 
-</head>
+    <div class="dashboard-page-header">
 
-<body>
+        <h1>
+            Financial Dashboard
+        </h1>
 
-    <h1>MoneyLens Financial Dashboard</h1>
+        <p>
+            See your money clearly.
+        </p>
 
-    <!-- Dashboard period selector -->
-    <form method="GET" action="/dashboard">
+    </div>
 
-        <!-- Select dashboard view -->
-        <label for="view">View:</label>
 
-        <select name="view" id="view">
+    <!-- =====================================================
+         Dashboard Period Selector
+         ===================================================== -->
 
-            <option value="month" {% if view == "month" %}selected{% endif %}>
-                Month
-            </option>
+    <div class="dashboard-controls">
 
-            <option value="year" {% if view == "year" %}selected{% endif %}>
-                Year
-            </option>
+        <form
+            method="GET"
+            action="{{ url_for('dashboard') }}"
+        >
 
-            <option value="all" {% if view == "all" %}selected{% endif %}>
-                All Time
-            </option>
+            <!-- Dashboard view -->
+            <label for="view">
+                View:
+            </label>
 
-        </select>
+            <select
+                name="view"
+                id="view"
+            >
 
-        <!-- Show month selector only for Month view -->
-        {% if view == "month" %}
+                <option
+                    value="month"
+                    {% if view == "month" %}selected{% endif %}
+                >
+                    Month
+                </option>
 
-            <label for="month">Month:</label>
+                <option
+                    value="year"
+                    {% if view == "year" %}selected{% endif %}
+                >
+                    Year
+                </option>
 
-            <select name="month" id="month">
-
-                <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
-                <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
-                <option value="3" {% if month == 3 %}selected{% endif %}>March</option>
-                <option value="4" {% if month == 4 %}selected{% endif %}>April</option>
-                <option value="5" {% if month == 5 %}selected{% endif %}>May</option>
-                <option value="6" {% if month == 6 %}selected{% endif %}>June</option>
-                <option value="7" {% if month == 7 %}selected{% endif %}>July</option>
-                <option value="8" {% if month == 8 %}selected{% endif %}>August</option>
-                <option value="9" {% if month == 9 %}selected{% endif %}>September</option>
-                <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
-                <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
-                <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+                <option
+                    value="all"
+                    {% if view == "all" %}selected{% endif %}
+                >
+                    All Time
+                </option>
 
             </select>
 
-        {% endif %}
 
-        <!-- Show year selector for Month and Year views -->
-        {% if view != "all" %}
+            <!-- Month selector -->
+            {% if view == "month" %}
 
-            <label for="year">Year:</label>
+                <label for="month">
+                    Month:
+                </label>
 
-            <input
-                type="number"
-                name="year"
-                id="year"
-                value="{{ year }}"
-                min="2020"
-            >
+                <select
+                    name="month"
+                    id="month"
+                >
 
-        {% endif %}
+                    <option
+                        value="1"
+                        {% if month == 1 %}selected{% endif %}
+                    >
+                        January
+                    </option>
 
-        <button type="submit">View</button>
+                    <option
+                        value="2"
+                        {% if month == 2 %}selected{% endif %}
+                    >
+                        February
+                    </option>
 
-    </form>
+                    <option
+                        value="3"
+                        {% if month == 3 %}selected{% endif %}
+                    >
+                        March
+                    </option>
 
-    <hr>
+                    <option
+                        value="4"
+                        {% if month == 4 %}selected{% endif %}
+                    >
+                        April
+                    </option>
 
-    <!-- Dashboard results -->
+                    <option
+                        value="5"
+                        {% if month == 5 %}selected{% endif %}
+                    >
+                        May
+                    </option>
+
+                    <option
+                        value="6"
+                        {% if month == 6 %}selected{% endif %}
+                    >
+                        June
+                    </option>
+
+                    <option
+                        value="7"
+                        {% if month == 7 %}selected{% endif %}
+                    >
+                        July
+                    </option>
+
+                    <option
+                        value="8"
+                        {% if month == 8 %}selected{% endif %}
+                    >
+                        August
+                    </option>
+
+                    <option
+                        value="9"
+                        {% if month == 9 %}selected{% endif %}
+                    >
+                        September
+                    </option>
+
+                    <option
+                        value="10"
+                        {% if month == 10 %}selected{% endif %}
+                    >
+                        October
+                    </option>
+
+                    <option
+                        value="11"
+                        {% if month == 11 %}selected{% endif %}
+                    >
+                        November
+                    </option>
+
+                    <option
+                        value="12"
+                        {% if month == 12 %}selected{% endif %}
+                    >
+                        December
+                    </option>
+
+                </select>
+
+            {% endif %}
+
+
+            <!-- Year selector -->
+            {% if view != "all" %}
+
+                <label for="year">
+                    Year:
+                </label>
+
+                <input
+                    type="number"
+                    name="year"
+                    id="year"
+                    value="{{ year }}"
+                    min="2020"
+                >
+
+            {% endif %}
+
+
+            <button type="submit">
+                View
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         MONTH VIEW
+         ===================================================== -->
 
     {% if view == "month" %}
 
         <!-- Monthly financial summary -->
-        <p>Total Income (This Month): ₹{{ total_income }}</p>
-        <p>Total Expense (This Month): ₹{{ total_expense }}</p>
-        <p>Balance (This Month): ₹{{ balance }}</p>
-        <p>Savings (This Month): ₹{{ savings }}</p>
-        <p>Savings Rate (This Month): {{ "%.2f"|format(savings_rate) }}%</p>
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_income) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expense
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_expense) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Balance
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(balance) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(savings) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings Rate
+                </h3>
+
+                <p>
+                    {{ "%.2f"|format(savings_rate) }}%
+                </p>
+
+            </div>
+
+        </div>
+
 
         <!-- Expense analytics -->
-        <h2>Expense by Category</h2>
+        <div class="analytics-section">
 
-        <p>
-            Top Expense Category:
-            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
-        </p>
+            <h2>
+                Expense by Category
+            </h2>
 
-        {% for category, amount in category_expenses %}
 
-            <p>{{ category }}: ₹{{ amount }}</p>
+            <!-- Top expense -->
+            <div class="top-expense-card">
 
-        {% endfor %}
+                <span class="top-expense-label">
+                    Top Expense Category
+                </span>
+
+                <strong>
+
+                    {{
+                        top_expense_category[0]
+                        if top_expense_category
+                        else "No expenses"
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <!-- Category list -->
+            {% for category, amount in category_expenses %}
+
+                <div class="category-row">
+
+                    <span>
+                        {{ category }}
+                    </span>
+
+                    <span>
+                        ₹{{ "{:,.2f}".format(amount) }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    <!-- =====================================================
+         YEAR VIEW
+         ===================================================== -->
 
     {% elif view == "year" %}
 
         <!-- Yearly financial summary -->
-        <p>Total Income (This Year): ₹{{ total_income }}</p>
-        <p>Total Expense (This Year): ₹{{ total_expense }}</p>
-        <p>Balance (This Year): ₹{{ balance }}</p>
-        <p>Savings (This Year): ₹{{ savings }}</p>
-        <p>Savings Rate (This Year): {{ "%.2f"|format(savings_rate) }}%</p>
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_income) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expense
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_expense) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Balance
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(balance) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(savings) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings Rate
+                </h3>
+
+                <p>
+                    {{ "%.2f"|format(savings_rate) }}%
+                </p>
+
+            </div>
+
+        </div>
+
 
         <!-- Expense analytics -->
-        <h2>Expense by Category</h2>
+        <div class="analytics-section">
 
-        <p>
-            Top Expense Category:
-            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
-        </p>
+            <h2>
+                Expense by Category
+            </h2>
 
-        {% for category, amount in category_expenses %}
 
-            <p>{{ category }}: ₹{{ amount }}</p>
+            <!-- Top expense -->
+            <div class="top-expense-card">
 
-        {% endfor %}
+                <span class="top-expense-label">
+                    Top Expense Category
+                </span>
 
-        <!-- Monthly breakdown for the selected year -->
-        <h2>Monthly Financial Breakdown</h2>
+                <strong>
 
-        <table
-            border="1"
-            style="border-collapse: collapse; width: 100%;"
-        >
+                    {{
+                        top_expense_category[0]
+                        if top_expense_category
+                        else "No expenses"
+                    }}
 
-            <thead>
+                </strong>
 
-                <tr>
+            </div>
 
-                    <th
-                        style="
-                            border: 1px solid black;
-                            padding: 10px;
-                            text-align: left;
-                        "
-                    >
-                        Month
-                    </th>
 
-                    <th
-                        style="
-                            border: 1px solid black;
-                            padding: 10px;
-                            text-align: right;
-                        "
-                    >
-                        Income
-                    </th>
+            <!-- Category list -->
+            {% for category, amount in category_expenses %}
 
-                    <th
-                        style="
-                            border: 1px solid black;
-                            padding: 10px;
-                            text-align: right;
-                        "
-                    >
-                        Expense
-                    </th>
+                <div class="category-row">
 
-                </tr>
+                    <span>
+                        {{ category }}
+                    </span>
 
-            </thead>
+                    <span>
+                        ₹{{ "{:,.2f}".format(amount) }}
+                    </span>
 
-            <tbody>
+                </div>
 
-                {% for item in monthly_breakdown %}
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Monthly financial breakdown -->
+        <div class="analytics-section">
+
+            <h2>
+                Monthly Financial Breakdown
+            </h2>
+
+
+            <table>
+
+                <thead>
 
                     <tr>
 
-                        <td
-                            style="
-                                border: 1px solid black;
-                                padding: 10px;
-                            "
-                        >
+                        <th>
+                            Month
+                        </th>
 
-                            {% if item.month == 1 %}
-                                January
-                            {% elif item.month == 2 %}
-                                February
-                            {% elif item.month == 3 %}
-                                March
-                            {% elif item.month == 4 %}
-                                April
-                            {% elif item.month == 5 %}
-                                May
-                            {% elif item.month == 6 %}
-                                June
-                            {% elif item.month == 7 %}
-                                July
-                            {% elif item.month == 8 %}
-                                August
-                            {% elif item.month == 9 %}
-                                September
-                            {% elif item.month == 10 %}
-                                October
-                            {% elif item.month == 11 %}
-                                November
-                            {% elif item.month == 12 %}
-                                December
-                            {% endif %}
+                        <th>
+                            Income
+                        </th>
 
-                        </td>
-
-                        <td
-                            style="
-                                border: 1px solid black;
-                                padding: 10px;
-                                text-align: right;
-                            "
-                        >
-                            ₹{{ item.income }}
-                        </td>
-
-                        <td
-                            style="
-                                border: 1px solid black;
-                                padding: 10px;
-                                text-align: right;
-                            "
-                        >
-                            ₹{{ item.expense }}
-                        </td>
+                        <th>
+                            Expense
+                        </th>
 
                     </tr>
 
-                {% endfor %}
+                </thead>
 
-            </tbody>
 
-        </table>
+                <tbody>
+
+                    {% for item in monthly_breakdown %}
+
+                        <tr>
+
+                            <td>
+
+                                {% if item.month == 1 %}
+                                    January
+                                {% elif item.month == 2 %}
+                                    February
+                                {% elif item.month == 3 %}
+                                    March
+                                {% elif item.month == 4 %}
+                                    April
+                                {% elif item.month == 5 %}
+                                    May
+                                {% elif item.month == 6 %}
+                                    June
+                                {% elif item.month == 7 %}
+                                    July
+                                {% elif item.month == 8 %}
+                                    August
+                                {% elif item.month == 9 %}
+                                    September
+                                {% elif item.month == 10 %}
+                                    October
+                                {% elif item.month == 11 %}
+                                    November
+                                {% elif item.month == 12 %}
+                                    December
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                ₹{{ "{:,.2f}".format(item.income) }}
+                            </td>
+
+
+                            <td>
+                                ₹{{ "{:,.2f}".format(item.expense) }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    <!-- =====================================================
+         ALL TIME VIEW
+         ===================================================== -->
 
     {% else %}
 
         <!-- All-time financial summary -->
-        <p>Total Income (All Time): ₹{{ total_income }}</p>
-        <p>Total Expense (All Time): ₹{{ total_expense }}</p>
-        <p>Balance (All Time): ₹{{ balance }}</p>
-        <p>Savings (All Time): ₹{{ savings }}</p>
-        <p>Savings Rate (All Time): {{ "%.2f"|format(savings_rate) }}%</p>
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_income) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expense
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(total_expense) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Balance
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(balance) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings
+                </h3>
+
+                <p>
+                    ₹{{ "{:,.2f}".format(savings) }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Savings Rate
+                </h3>
+
+                <p>
+                    {{ "%.2f"|format(savings_rate) }}%
+                </p>
+
+            </div>
+
+        </div>
+
 
         <!-- Expense analytics -->
-        <h2>Expense by Category</h2>
+        <div class="analytics-section">
 
-        <p>
-            Top Expense Category:
-            {{ top_expense_category[0] if top_expense_category else "No expenses" }}
-        </p>
+            <h2>
+                Expense by Category
+            </h2>
 
-        {% for category, amount in category_expenses %}
 
-            <p>{{ category }}: ₹{{ amount }}</p>
+            <!-- Top expense -->
+            <div class="top-expense-card">
 
-        {% endfor %}
+                <span class="top-expense-label">
+                    Top Expense Category
+                </span>
+
+                <strong>
+
+                    {{
+                        top_expense_category[0]
+                        if top_expense_category
+                        else "No expenses"
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <!-- Category list -->
+            {% for category, amount in category_expenses %}
+
+                <div class="category-row">
+
+                    <span>
+                        {{ category }}
+                    </span>
+
+                    <span>
+                        ₹{{ "{:,.2f}".format(amount) }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
 
     {% endif %}
 
-    <!-- Automatically submit the form when the dashboard view changes -->
+
+    <!-- =====================================================
+         Dashboard JavaScript
+         ===================================================== -->
+
     <script>
 
-        document.getElementById("view").addEventListener("change", function () {
-            this.form.submit();
-        });
+        const viewSelector = document.getElementById("view");
+
+        if (viewSelector) {
+
+            viewSelector.addEventListener(
+                "change",
+                function () {
+
+                    this.form.submit();
+
+                }
+            );
+
+        }
 
     </script>
 
-</body>
+</div>
 
-</html>
-
+{% endblock %}

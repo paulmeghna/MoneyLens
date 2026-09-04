@@ -103,7 +103,7 @@ def login():
 
             # Return the user to the page they originally requested,
             # or to the home page if there was no protected page.
-            return redirect(request.args.get("next") or "/")
+            return redirect(request.args.get("next") or "/dashboard")
 
         return "Invalid email or password.", 401
 
@@ -114,7 +114,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return "Logged out successfully."
+    return render_template("logout.html")
 
 
 # ------------------------------------------------------------
@@ -608,8 +608,10 @@ def budgets():
         ) * 100
 
         # Determine whether the budget has been exceeded.
-        if remaining < 0:
+        if utilization >= 100:
             status = "Overspent"
+        elif utilization >= 80:
+            status = "Near Limit"
         else:
             status = "Within Budget"
 

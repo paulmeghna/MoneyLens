@@ -4,62 +4,148 @@
 
 {% block content %}
 
-<h2>Edit Transaction</h2>
+<div class="edit-transaction-page">
 
-<form method="POST">
+    <section class="edit-transaction-card">
 
-    <label for="type">Type:</label>
+        <!-- Page Header -->
+        <div class="edit-transaction-header">
 
-    <select id="type" name="type" required>
-        <option value="income" {% if transaction.type == "income" %}selected{% endif %}>
-            Income
-        </option>
-        <option value="expense" {% if transaction.type == "expense" %}selected{% endif %}>
-            Expense
-        </option>
-    </select>
+            <h1>Edit Transaction</h1>
 
-        <label for="amount">Amount:</label>
-    <input
-        type="number"
-        id="amount"
-        name="amount"
-        value="{{ transaction.amount }}"
-        step="0.01"
-        required
-    >
+            <p>
+                Update your transaction details below.
+            </p>
 
-        <label for="category">Category:</label>
-    <input
-        type="text"
-        id="category"
-        name="category"
-        value="{{ transaction.category }}"
-        required
-    >
-
-        <label for="description">Description:</label>
-    <input
-        type="text"
-        id="description"
-        name="description"
-        value="{{ transaction.description }}"
-        required
-    >
-
-        <label for="date">Date:</label>
-    <input
-        type="date"
-        id="date"
-        name="date"
-        value="{{ transaction.date }}"
-        required
-    >
-
-        <button type="submit">Update Transaction</button>
+        </div>
 
 
-</form>
+        <!-- Edit Transaction Form -->
+        <form method="POST" class="edit-transaction-form">
 
+            <div class="transaction-form-group">
+
+                <label for="type">
+                    Transaction Type
+                </label>
+
+                <select
+                    id="type"
+                    name="type"
+                    required
+                >
+
+                    <option
+                        value="income"
+                        {% if transaction.type == "income" %}selected{% endif %}
+                    >
+                        Income
+                    </option>
+
+                    <option
+                        value="expense"
+                        {% if transaction.type == "expense" %}selected{% endif %}
+                    >
+                        Expense
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="transaction-form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    value="{{ transaction.amount }}"
+                    min="0.01"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <div class="transaction-form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <input
+                    type="text"
+                    id="category"
+                    name="category"
+                    value="{{ transaction.category }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="transaction-form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value="{{ transaction.description }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="transaction-form-group">
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value="{{ transaction.date }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="edit-transaction-actions">
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Update Transaction
+                </button>
+
+                <a
+                    href="{{ url_for('transactions') }}"
+                    class="edit-transaction-cancel"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
 
 {% endblock %}
