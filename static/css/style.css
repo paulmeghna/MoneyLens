@@ -122,6 +122,40 @@ button {
 }
 
 
+
+/* ============================================================
+   Dashboard Page Header
+   ============================================================ */
+
+.dashboard-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-page-header {
+    margin-bottom: 22px;
+}
+
+.dashboard-page-header h1 {
+    margin: 0 0 6px;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+
+    color: #1f2933;
+}
+
+.dashboard-page-header p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #65727e;
+}
+
+
 /* ============================================================
    Dashboard Controls
    ============================================================ */
@@ -201,7 +235,7 @@ button {
 .summary-card {
     position: relative;
 
-    min-height: 135px;
+    min-height: 145px;
 
     display: flex;
     flex-direction: column;
@@ -210,13 +244,21 @@ button {
 
     border-radius: 16px;
 
-    padding: 20px 16px;
+    padding: 22px 16px;
 
     text-align: center;
 
-    box-shadow: 0 4px 12px rgba(31, 41, 51, 0.06);
+    box-shadow: 0 5px 14px rgba(31, 41, 51, 0.08);
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 
     overflow: hidden;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 18px rgba(31, 41, 51, 0.10);
 }
 
 .summary-card::before {
@@ -312,15 +354,15 @@ button {
    ============================================================ */
 
 .analytics-section {
-    background-color: #fffdf5;
+    background-color: #ffffff;
 
-    border: 1px solid #e3d9b8;
-    border-radius: 16px;
+    border: 1px solid #d9e2ec;
+    border-radius: 18px;
 
-    padding: 22px;
-    margin-bottom: 20px;
+    padding: 24px;
+    margin-bottom: 22px;
 
-    box-shadow: 0 3px 8px rgba(120, 100, 40, 0.05);
+    box-shadow: 0 5px 14px rgba(31, 41, 51, 0.06);
 }
 
 .analytics-section h2 {
