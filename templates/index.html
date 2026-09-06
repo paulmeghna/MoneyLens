@@ -1,10 +1,102 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Expense Tracker{% endblock %}
+{% block title %}MoneyLens - Personal Finance{% endblock %}
 
 {% block content %}
 
-<h2>Welcome to our Expense Tracker!</h2>
-<p>Manage your income and expenses easily.</p>
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-brand">
+
+            <div
+                class="auth-logo"
+                aria-label="MoneyLens logo"
+            >
+
+                <svg
+                    viewBox="0 0 64 64"
+                    role="img"
+                    aria-hidden="true"
+                >
+
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="5"
+                    />
+
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="10"
+                        fill="currentColor"
+                        opacity="0.18"
+                    />
+
+                    <path
+                        d="M18 35 L26 27 L32 32 L43 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <path
+                        d="M37 20 H43 V26"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                    />
+
+                </svg>
+
+            </div>
+
+            <h1>MoneyLens</h1>
+
+            <p>
+                See your money clearly.
+            </p>
+
+        </div>
+
+
+        <h2>
+            Take Control of Your Finances
+        </h2>
+
+        <p class="auth-subtitle">
+            Track your income, expenses, budgets, and financial progress
+            in one simple place.
+        </p>
+
+
+        <a
+            href="{{ url_for('login') }}"
+            class="primary-button auth-button"
+            style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;"
+        >
+            Login
+        </a>
+
+
+        <a
+            href="{{ url_for('register') }}"
+            class="edit-budget-cancel"
+            style="display: flex; margin-top: 10px;"
+        >
+            Create an Account
+        </a>
+
+    </div>
+
+</div>
 
 {% endblock %}

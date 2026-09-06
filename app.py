@@ -73,7 +73,12 @@ def register():
         existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
-            return "Email already registered.", 400
+            return render_template(
+                "message.html",
+                title="Registration failed",
+                message="This email address is already registered.",
+                back_url="/register"
+            ), 400
 
         # Hash the password before storing it.
         password_hash = generate_password_hash(password)

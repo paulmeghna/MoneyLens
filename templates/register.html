@@ -1,30 +1,154 @@
 {% extends "base.html" %}
 
-{% block title %}Register - MoneyLens{% endblock %}
+{% block title %}Create Account - MoneyLens{% endblock %}
 
 {% block content %}
 
-<h2>Create Your Account</h2>
+<div class="auth-page">
 
-<form method="POST">
+    <div class="auth-card">
 
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
+        <div class="auth-brand">
 
-    <br><br>
+            <div class="auth-logo">
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+                <svg
+                    viewBox="0 0 64 64"
+                    role="img"
+                    aria-hidden="true"
+                >
 
-    <br><br>
+                    <!-- Outer lens -->
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="5"
+                    />
 
-    <br><br>
+                    <!-- Coin center -->
 
-    <button type="submit">Register</button>
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="10"
+                        fill="currentColor"
+                        opacity="0.18"
+                    />
 
-</form>
+                    <!-- Financial growth line -->
+
+                    <path
+                        d="M18 35 L26 27 L32 32 L43 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <!-- Arrow head -->
+
+                    <path
+                        d="M37 20 H43 V26"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                    />
+
+                </svg>
+
+            </div>
+
+            <h1>MoneyLens</h1>
+
+            <p>
+                See your money clearly.
+            </p>
+
+        </div>
+
+
+        <h2>
+            Create Your Account
+        </h2>
+
+        <p class="auth-subtitle">
+            Start managing your finances with MoneyLens.
+        </p>
+
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    autocomplete="name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button auth-button"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}
