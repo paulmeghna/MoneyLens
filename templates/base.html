@@ -38,6 +38,7 @@
             >
 
                 <!-- MoneyLens logo -->
+
                 <span
                     class="site-brand-logo"
                     aria-label="MoneyLens logo"
@@ -50,6 +51,7 @@
                     >
 
                         <!-- Outer lens -->
+
                         <circle
                             cx="29"
                             cy="29"
@@ -60,6 +62,7 @@
                         />
 
                         <!-- Coin center -->
+
                         <circle
                             cx="29"
                             cy="29"
@@ -69,6 +72,7 @@
                         />
 
                         <!-- Financial growth line -->
+
                         <path
                             d="M18 35 L26 27 L32 32 L43 20"
                             fill="none"
@@ -79,6 +83,7 @@
                         />
 
                         <!-- Arrow head -->
+
                         <path
                             d="M37 20 H43 V26"
                             fill="none"
@@ -110,15 +115,41 @@
             aria-label="Main navigation"
         >
 
-            <a href="{{ url_for('dashboard') }}">
+            <!-- Dashboard -->
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="{% if request.endpoint == 'dashboard' %}active{% endif %}"
+                {% if request.endpoint == 'dashboard' %}
+                    aria-current="page"
+                {% endif %}
+            >
                 Dashboard
             </a>
 
-            <a href="{{ url_for('transactions') }}">
+
+            <!-- Transactions -->
+
+            <a
+                href="{{ url_for('transactions') }}"
+                class="{% if request.endpoint in ['transactions', 'add_transaction', 'edit_transaction'] %}active{% endif %}"
+                {% if request.endpoint in ['transactions', 'add_transaction', 'edit_transaction'] %}
+                    aria-current="page"
+                {% endif %}
+            >
                 Transactions
             </a>
 
-            <a href="{{ url_for('budgets') }}">
+
+            <!-- Budgets -->
+
+            <a
+                href="{{ url_for('budgets') }}"
+                class="{% if request.endpoint in ['budgets', 'add_budget', 'edit_budget'] %}active{% endif %}"
+                {% if request.endpoint in ['budgets', 'add_budget', 'edit_budget'] %}
+                    aria-current="page"
+                {% endif %}
+            >
                 Budgets
             </a>
 
@@ -132,6 +163,7 @@
                 <summary>
                     Logout
                 </summary>
+
 
                 <div
                     class="logout-confirmation"
@@ -208,6 +240,7 @@
                         >
                             Cancel
                         </button>
+
 
                         <a
                             href="{{ url_for('logout') }}"

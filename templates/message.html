@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}MoneyLens - Message{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-brand">
+
+            <div class="auth-logo">
+
+                <svg
+                    viewBox="0 0 64 64"
+                    role="img"
+                    aria-hidden="true"
+                >
+
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="5"
+                    />
+
+                    <circle
+                        cx="29"
+                        cy="29"
+                        r="10"
+                        fill="currentColor"
+                        opacity="0.18"
+                    />
+
+                    <path
+                        d="M18 35 L26 27 L32 32 L43 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <path
+                        d="M37 20 H43 V26"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                    />
+
+                </svg>
+
+            </div>
+
+            <h1>MoneyLens</h1>
+
+            <p>
+                See your money clearly.
+            </p>
+
+        </div>
+
+
+        <h2>
+            {{ title }}
+        </h2>
+
+        <p class="auth-subtitle">
+            {{ message }}
+        </p>
+
+
+        {% if back_url %}
+
+            <a
+                href="{{ back_url }}"
+                class="primary-button"
+                style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; width: 100%;"
+            >
+                Continue
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

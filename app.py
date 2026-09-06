@@ -89,6 +89,9 @@ def register():
 
         return "Registration successful!"
 
+    # GET request: display the registration page.
+    return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -105,7 +108,12 @@ def login():
             # or to the home page if there was no protected page.
             return redirect(request.args.get("next") or "/dashboard")
 
-        return "Invalid email or password.", 401
+        return render_template(
+            "message.html",
+            title="Login failed",
+            message="Invalid email or password.",
+            back_url="/login"
+        ), 401
 
     return render_template("login.html")
 
@@ -221,6 +229,7 @@ def dashboard():
     # --------------------------------------------------------
     # Basic financial calculations.
     # --------------------------------------------------------
+
 
     # Calculate total income for the selected view.
     total_income = income_query.with_entities(
@@ -567,9 +576,14 @@ def budgets():
 
             # The Budget model has a unique constraint on
             # user + category + month + year.
-            return (
-                "A budget already exists for this category, "
-                "month, and year."
+            return render_template(
+                "message.html",
+                title="Budget already exists",
+                message=(
+                    "A budget already exists for this category, "
+                    "month, and year."
+                ),
+                back_url="/budgets"
             ), 400
 
         # POST-Redirect-GET prevents duplicate budgets

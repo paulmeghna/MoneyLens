@@ -816,6 +816,19 @@ button {
 }
 
 
+.site-navigation a.active {
+    background-color: #2e7d32;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(46, 125, 50, 0.18);
+}
+
+.site-navigation a.active:hover {
+    background-color: #256628;
+    color: #ffffff;
+}
+
+
+
 /* ============================================================
    Logout Confirmation Menu
    ============================================================ */
