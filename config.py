@@ -11,8 +11,9 @@ class Config:
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "0") == "1"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
-        BASE_DIR, "instance", "database.db"
-    )
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///" + os.path.join(BASE_DIR, "instance", "database.db")
+)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
