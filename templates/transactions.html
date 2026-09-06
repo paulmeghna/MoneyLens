@@ -36,6 +36,7 @@
             method="POST"
             action="{{ url_for('transactions') }}"
         >
+            {{ csrf_token() }}
 
             <!-- Transaction type -->
             <div class="form-group">
@@ -242,6 +243,7 @@
                         method="POST"
                         action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}"
                     >
+                        {{ csrf_token() }}
 
                         <button
                             type="submit"

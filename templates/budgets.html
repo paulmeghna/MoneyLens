@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}MoneyLens Budgets{% endblock %}
 
@@ -30,6 +30,7 @@
         <h2>Add New Budget</h2>
 
         <form method="POST">
+            {{ csrf_token() }}
 
             <div class="budget-form-group">
 
@@ -225,7 +226,7 @@
                                 </span>
 
                                 <strong>
-                                    ₹{{ budget.amount }}
+                                    â‚¹{{ budget.amount }}
                                 </strong>
 
                             </div>
@@ -238,7 +239,7 @@
                                 </span>
 
                                 <strong>
-                                    ₹{{ budget.spent }}
+                                    â‚¹{{ budget.spent }}
                                 </strong>
 
                             </div>
@@ -251,7 +252,7 @@
                                 </span>
 
                                 <strong>
-                                    ₹{{ budget.remaining }}
+                                    â‚¹{{ budget.remaining }}
                                 </strong>
 
                             </div>
@@ -307,6 +308,7 @@
                                 method="POST"
                                 action="{{ url_for('delete_budget', budget_id=budget.id) }}"
                             >
+                            {{ csrf_token() }}
 
                                 <button
                                     type="submit"

@@ -25,6 +25,10 @@ from models import db, User, Transaction, Budget
 app = Flask(__name__)
 app.config.from_object(Config)
 
+from flask_wtf.csrf import CSRFProtect
+
+csrf = CSRFProtect(app)
+
 # Connect SQLAlchemy to the Flask application.
 db.init_app(app)
 

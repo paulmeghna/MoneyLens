@@ -1,4 +1,4 @@
-from models import User, Transaction, Budget
+﻿from models import User, Transaction, Budget
 
 
 def test_home_page(client):
@@ -949,3 +949,106 @@ def test_missing_budget_category_rejected(client):
 
     assert response.status_code == 400
     assert b"Category is required" in response.data
+
+
+def test_register_rejects_missing_csrf_token(csrf_client):
+    response = csrf_client.post(
+        "/register",
+        data={
+            "name": "CSRF Test User",
+            "email": "csrf@example.com",
+            "password": "TestPassword123",
+        },
+    )
+
+    assert response.status_code == 400
+
+
+def test_transaction_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/transactions",
+        data={
+            "type": "expense",
+            "amount": "100",
+            "category": "Food",
+            "description": "Test",
+            "date": "2026-09-06",
+        },
+    )
+
+    assert response.status_code == 400
+
+def test_budget_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/budgets",
+        data={
+            "category": "Food",
+            "month": "9",
+            "year": "2026",
+            "amount": "2500",
+        },
+    )
+
+    assert response.status_code == 400
+
+
+def test_edit_transaction_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/transactions/1/edit",
+        data={
+            "type": "expense",
+            "amount": "150",
+            "category": "Food",
+            "description": "Updated",
+            "date": "2026-09-06",
+        },
+    )
+
+    assert response.status_code == 400
+
+def test_delete_transaction_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/transactions/1/delete"
+    )
+
+    assert response.status_code == 400
+
+
+def test_edit_budget_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/budgets/1/edit",
+        data={
+            "category": "Food",
+            "month": "9",
+            "year": "2026",
+            "amount": "2500",
+        },
+    )
+
+    assert response.status_code == 400
+
+
+def test_delete_budget_rejects_missing_csrf_token(csrf_client):
+    with csrf_client.session_transaction() as session:
+        session["_user_id"] = "1"
+
+    response = csrf_client.post(
+        "/budgets/1/delete"
+    )
+
+    assert response.status_code == 400

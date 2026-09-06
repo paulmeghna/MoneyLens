@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Edit Budget - MoneyLens{% endblock %}
 
@@ -22,6 +22,7 @@
 
         <!-- Edit Budget Form -->
         <form method="POST" class="edit-budget-form">
+            {{ csrf_token() }}
 
             <div class="budget-form-group">
 
