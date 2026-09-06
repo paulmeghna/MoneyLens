@@ -19,7 +19,6 @@
                 >
 
                     <!-- Outer lens -->
-
                     <circle
                         cx="29"
                         cy="29"
@@ -30,7 +29,6 @@
                     />
 
                     <!-- Coin center -->
-
                     <circle
                         cx="29"
                         cy="29"
@@ -40,7 +38,6 @@
                     />
 
                     <!-- Financial growth line -->
-
                     <path
                         d="M18 35 L26 27 L32 32 L43 20"
                         fill="none"
@@ -51,7 +48,6 @@
                     />
 
                     <!-- Arrow head -->
-
                     <path
                         d="M37 20 H43 V26"
                         fill="none"
@@ -83,7 +79,11 @@
 
 
         <form method="POST">
-            {{ csrf_token() }}
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
 
             <div class="form-group">
 
