@@ -1052,3 +1052,13 @@ def test_delete_budget_rejects_missing_csrf_token(csrf_client):
     )
 
     assert response.status_code == 400
+
+
+def test_custom_500_error_page(client):
+    with client.application.test_request_context("/"):
+        response = client.application.handle_exception(
+            Exception("test error")
+        )
+
+    assert response.status_code == 500
+    assert b"Something Went Wrong" in response.get_data()

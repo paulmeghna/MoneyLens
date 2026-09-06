@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Method Not Allowed - MoneyLens{% endblock %}
+
+{% block content %}
+
+<div class="error-page">
+
+    <div class="error-card">
+
+        <h1>405</h1>
+
+        <h2>Method Not Allowed</h2>
+
+        <p>
+            Sorry, this action is not allowed for this request.
+        </p>
+
+        <a
+            href="{{ url_for('login') }}"
+            class="primary-button"
+        >
+            Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
