@@ -126,7 +126,12 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        return "Registration successful!"
+        return render_template(
+            "message.html",
+            title="Registration successful",
+            message="Your MoneyLens account has been created successfully.",
+            back_url="/login"
+        )
 
     # GET request: display the registration page.
     return render_template("register.html")
