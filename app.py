@@ -28,6 +28,18 @@ app.config.from_object(Config)
 # Connect SQLAlchemy to the Flask application.
 db.init_app(app)
 
+
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+
+
+@event.listens_for(Engine, "connect")
+def enable_sqlite_foreign_keys(dbapi_connection, connection_record):
+    if dbapi_connection.__class__.__module__.startswith("sqlite3"):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
 # Configure Flask-Migrate for database schema changes.
 migrate = Migrate(app, db)
 
