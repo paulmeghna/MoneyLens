@@ -1,4 +1,6 @@
+
 import os
+
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -9,11 +11,22 @@ class Config:
 
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
-    SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "0") == "1"
+    SESSION_COOKIE_SECURE = (
+        os.environ.get("SESSION_COOKIE_SECURE", "0") == "1"
+    )
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-    "DATABASE_URL",
-    "sqlite:///" + os.path.join(BASE_DIR, "instance", "database.db")
-)
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+
+    if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgres://",
+            "postgresql+psycopg://",
+            1
+        )
+
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL or (
+        "sqlite:///"
+        + os.path.join(BASE_DIR, "instance", "database.db")
+    )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
