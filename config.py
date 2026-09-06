@@ -7,6 +7,10 @@ class Config:
     SECRET_KEY = os.environ["SECRET_KEY"]
     DEBUG = os.environ.get("FLASK_DEBUG", "0") == "1"
 
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "0") == "1"
+
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         BASE_DIR, "instance", "database.db"
     )
