@@ -8,10 +8,11 @@
 
     <section class="edit-transaction-card">
 
-        <!-- Page Header -->
         <div class="edit-transaction-header">
 
-            <h1>Edit Transaction</h1>
+            <h1>
+                Edit Transaction
+            </h1>
 
             <p>
                 Update your transaction details below.
@@ -20,9 +21,21 @@
         </div>
 
 
-        <!-- Edit Transaction Form -->
-        <form method="POST" class="edit-transaction-form">
-            {{ csrf_token() }}
+        <form
+            method="POST"
+            action="{{ url_for(
+                'edit_transaction',
+                transaction_id=transaction.id
+            ) }}"
+            class="edit-transaction-form"
+        >
+
+            <!-- CSRF protection -->
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
 
 
             <div class="transaction-form-group">
@@ -39,14 +52,18 @@
 
                     <option
                         value="income"
-                        {% if transaction.type == "income" %}selected{% endif %}
+                        {% if transaction.type == "income" %}
+                            selected
+                        {% endif %}
                     >
                         Income
                     </option>
 
                     <option
                         value="expense"
-                        {% if transaction.type == "expense" %}selected{% endif %}
+                        {% if transaction.type == "expense" %}
+                            selected
+                        {% endif %}
                     >
                         Expense
                     </option>
@@ -69,6 +86,8 @@
                     value="{{ transaction.amount }}"
                     min="0.01"
                     step="0.01"
+                    inputmode="decimal"
+                    autocomplete="off"
                     required
                 >
 
@@ -86,6 +105,8 @@
                     id="category"
                     name="category"
                     value="{{ transaction.category }}"
+                    maxlength="50"
+                    autocomplete="off"
                     required
                 >
 
@@ -96,14 +117,18 @@
 
                 <label for="description">
                     Description
+                    <span style="font-weight: normal;">
+                        (optional)
+                    </span>
                 </label>
 
                 <input
                     type="text"
                     id="description"
                     name="description"
-                    value="{{ transaction.description }}"
-                    required
+                    value="{{ transaction.description or '' }}"
+                    maxlength="200"
+                    autocomplete="off"
                 >
 
             </div>
