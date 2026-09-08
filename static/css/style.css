@@ -397,6 +397,53 @@ button {
     justify-content: center;
 }
 
+
+/* ============================================================
+   Empty Analytics State
+   ============================================================ */
+
+.empty-analytics-state {
+    min-height: 320px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin: 10px 0 24px;
+    padding: 30px;
+
+    background-color: #eef6ff;
+
+    border: 1px solid #d7e8f8;
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+.empty-analytics-state h3 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #315b7d;
+}
+
+.empty-analytics-state p {
+    margin: 0;
+
+    max-width: 420px;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: #6b8296;
+}
+
+
 /* ============================================================
    Top Expense Category
    ============================================================ */
@@ -1076,257 +1123,6 @@ button {
 
 
 /* ============================================================
-   MoneyLens Budget Page
-   ============================================================ */
-
-.budget-page {
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.budget-page-header {
-    margin-bottom: 20px;
-}
-
-.budget-page-header h1 {
-    margin-bottom: 6px;
-    color: #1f2933;
-}
-
-.budget-page-header p {
-    margin: 0;
-    color: #65727e;
-}
-
-
-/* Add Budget Card */
-
-.budget-form-card {
-    background-color: #fff4cc;
-    border: 1px solid #e6d58a;
-    border-radius: 18px;
-    padding: 22px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 8px rgba(120, 100, 40, 0.06);
-}
-
-.budget-form-card h2 {
-    margin-bottom: 18px;
-}
-
-.budget-form-card form {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr) auto;
-    gap: 14px;
-    align-items: end;
-}
-
-.budget-form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #39443c;
-}
-
-.budget-form-group input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #9f8f62;
-    border-radius: 12px;
-    background-color: #f3e6c8;
-    outline: none;
-}
-
-.budget-form-group input:focus {
-    border-color: #2e7d32;
-    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.12);
-}
-
-
-/* Existing Budgets */
-
-.budget-list-section {
-    margin-top: 20px;
-}
-
-.budget-list-header h2 {
-    margin-bottom: 15px;
-}
-
-.budget-item {
-    background-color: #ffffff;
-    border: 1px solid #d9e2ec;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 3px 8px rgba(31, 41, 51, 0.05);
-}
-
-.budget-item-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 18px;
-}
-
-.budget-item-header h3 {
-    margin: 0 0 5px;
-    color: #1f2933;
-}
-
-.budget-period {
-    margin: 0;
-    font-size: 14px;
-    color: #65727e;
-}
-
-.budget-status {
-    padding: 7px 12px;
-    border-radius: 20px;
-    background-color: #e8f6ea;
-    color: #2e7d32;
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-
-/* Budget Details */
-
-.budget-details {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 18px;
-}
-
-.budget-detail {
-    padding: 13px;
-    border-radius: 12px;
-    background-color: #f1f6f2;
-    border: 1px solid #cddfd1;
-}
-
-.budget-detail-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #65727e;
-}
-
-.budget-detail strong {
-    font-size: 16px;
-    color: #25372b;
-}
-
-
-/* Budget Actions */
-
-.budget-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-}
-
-.budget-actions form {
-    margin: 0;
-}
-
-
-/* ============================================================
-   Budget Usage Visualization
-   ============================================================ */
-
-.budget-progress {
-    margin-bottom: 18px;
-    width: 100%;
-}
-
-.budget-progress-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    margin-bottom: 8px;
-
-    font-size: 13px;
-    color: #65727e;
-}
-
-.budget-progress-label strong {
-    color: #1f2933;
-}
-
-
-/* Progress bar */
-
-.budget-progress-bar {
-    display: block;
-
-    width: 100%;
-    height: 10px;
-
-    border: none;
-    border-radius: 999px;
-
-    overflow: hidden;
-
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-
-/* Empty part of the bar */
-
-.budget-progress-bar::-webkit-progress-bar {
-    background-color: #e8edf0;
-    border-radius: 999px;
-}
-
-.budget-progress-bar::-moz-progress-bar {
-    border-radius: 999px;
-}
-
-
-/* Safe - Green */
-
-.budget-progress-safe::-webkit-progress-value {
-    background-color: #3f8f46;
-    border-radius: 999px;
-}
-
-.budget-progress-safe::-moz-progress-bar {
-    background-color: #3f8f46;
-}
-
-
-/* Warning - Yellow */
-
-.budget-progress-warning::-webkit-progress-value {
-    background-color: #d9a441;
-    border-radius: 999px;
-}
-
-.budget-progress-warning::-moz-progress-bar {
-    background-color: #d9a441;
-}
-
-
-/* Danger - Red */
-
-.budget-progress-danger::-webkit-progress-value {
-    background-color: #d9534f;
-    border-radius: 999px;
-}
-
-.budget-progress-danger::-moz-progress-bar {
-    background-color: #d9534f;
-}
-
-
-/* ============================================================
    Logout Page
    ============================================================ */
 
@@ -1918,4 +1714,587 @@ button {
         text-align: center;
     }
 
+}
+
+
+/* ============================================================
+   MoneyLens Budget Page
+   ============================================================ */
+
+.budget-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+/* ============================================================
+   Page Header
+   ============================================================ */
+
+.budget-page-header {
+    margin-bottom: 26px;
+}
+
+.budget-eyebrow {
+    margin: 0 0 5px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: #2e7d32;
+}
+
+.budget-page-header h1 {
+    margin: 0 0 7px;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+
+    color: #1f2933;
+}
+
+.budget-page-description {
+    max-width: 650px;
+
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.55;
+
+    color: #65727e;
+}
+
+
+/* ============================================================
+   Add Budget Card
+   ============================================================ */
+
+.budget-form-card {
+    background-color: #fff4cc;
+
+    border: 1px solid #e6d58a;
+    border-radius: 18px;
+
+    padding: 24px;
+
+    margin-bottom: 32px;
+
+    box-shadow:
+        0 4px 12px rgba(120, 100, 40, 0.07);
+}
+
+.budget-card-heading {
+    margin-bottom: 20px;
+}
+
+.budget-card-heading h2 {
+    margin: 0 0 5px;
+
+    font-size: 21px;
+    font-weight: 700;
+
+    color: #2f3a32;
+}
+
+.budget-card-heading p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #65727e;
+}
+
+
+/* ============================================================
+   Budget Form
+   ============================================================ */
+
+.budget-form {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr))
+        auto;
+
+    gap: 14px;
+
+    align-items: end;
+}
+
+.budget-form-group {
+    min-width: 0;
+}
+
+.budget-form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #39443c;
+}
+
+.budget-form-group input,
+.budget-form-group select {
+    width: 100%;
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #9f8f62;
+    border-radius: 12px;
+
+    background-color: #f3e6c8;
+    color: #2d2a22;
+
+    font: inherit;
+
+    outline: none;
+}
+
+.budget-form-group input::placeholder {
+    color: #817a69;
+}
+
+.budget-form-group input:focus,
+.budget-form-group select:focus {
+    border-color: #2e7d32;
+
+    box-shadow:
+        0 0 0 3px rgba(46, 125, 50, 0.10);
+}
+
+
+/* ============================================================
+   Currency Input
+   ============================================================ */
+
+.budget-money-input {
+    position: relative;
+}
+
+.budget-money-input span {
+    position: absolute;
+
+    top: 50%;
+    left: 12px;
+
+    transform: translateY(-50%);
+
+    color: #65727e;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+.budget-money-input input {
+    padding-left: 30px;
+}
+
+.budget-form-action {
+    display: flex;
+}
+
+
+/* ============================================================
+   Budget List Header
+   ============================================================ */
+
+.budget-list-section {
+    margin-top: 20px;
+}
+
+.budget-list-header {
+    margin-bottom: 16px;
+}
+
+.budget-list-header h2 {
+    margin: 0 0 5px;
+
+    font-size: 21px;
+
+    color: #24352a;
+}
+
+.budget-list-header p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #65727e;
+}
+
+
+/* ============================================================
+   Budget Cards
+   ============================================================ */
+
+.budget-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.budget-item {
+    background-color: #ffffff;
+
+    border: 1px solid #d9e2ec;
+    border-radius: 16px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 3px 8px rgba(31, 41, 51, 0.05);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.budget-item:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 14px rgba(31, 41, 51, 0.08);
+}
+
+
+/* ============================================================
+   Budget Card Header
+   ============================================================ */
+
+.budget-item-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+.budget-item-header h3 {
+    margin: 0 0 5px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #1f2933;
+}
+
+.budget-period {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #65727e;
+}
+
+
+/* ============================================================
+   Budget Status
+   ============================================================ */
+
+.budget-status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 30px;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.budget-status-safe {
+    background-color: #e8f6ea;
+    color: #2e7d32;
+}
+
+.budget-status-warning {
+    background-color: #fff4cc;
+
+    border: 1px solid #e6d58a;
+
+    color: #9a7b00;
+}
+
+.budget-status-danger {
+    background-color: #ffe0e0;
+    color: #9b2226;
+}
+
+
+/* ============================================================
+   Financial Details
+   ============================================================ */
+
+.budget-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-bottom: 19px;
+}
+
+.budget-detail {
+    padding: 14px;
+
+    background-color: #f6f8f7;
+
+    border: 1px solid #dde6df;
+    border-radius: 12px;
+}
+
+.budget-detail-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 12px;
+
+    color: #65727e;
+}
+
+.budget-detail strong {
+    font-size: 16px;
+
+    color: #25372b;
+}
+
+
+/* ============================================================
+   Budget Progress
+   ============================================================ */
+
+.budget-progress {
+    width: 100%;
+
+    margin-bottom: 18px;
+}
+
+.budget-progress-label {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    font-size: 13px;
+
+    color: #65727e;
+}
+
+.budget-progress-label strong {
+    color: #1f2933;
+}
+
+.budget-progress-bar {
+    display: block;
+
+    width: 100%;
+    height: 10px;
+
+    border: 0;
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.budget-progress-bar::-webkit-progress-bar {
+    background-color: #e8edf0;
+
+    border-radius: 999px;
+}
+
+.budget-progress-safe::-webkit-progress-value {
+    background-color: #3f8f46;
+
+    border-radius: 999px;
+}
+
+.budget-progress-warning::-webkit-progress-value {
+    background-color: #d9a441;
+
+    border-radius: 999px;
+}
+
+.budget-progress-danger::-webkit-progress-value {
+    background-color: #d9534f;
+
+    border-radius: 999px;
+}
+
+.budget-progress-safe::-moz-progress-bar {
+    background-color: #3f8f46;
+}
+
+.budget-progress-warning::-moz-progress-bar {
+    background-color: #d9a441;
+}
+
+.budget-progress-danger::-moz-progress-bar {
+    background-color: #d9534f;
+}
+
+
+/* ============================================================
+   Budget Actions
+   ============================================================ */
+
+.budget-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    padding-top: 2px;
+}
+
+.budget-actions form {
+    margin: 0;
+}
+
+
+/* ============================================================
+   Empty Budget State
+   ============================================================ */
+
+.budget-empty-state {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 180px;
+
+    padding: 28px;
+
+    background-color: #f8fafc;
+
+    border: 1px dashed #d1d9e0;
+    border-radius: 16px;
+
+    text-align: center;
+}
+
+.budget-empty-message {
+    max-width: 430px;
+}
+
+.budget-empty-message h3 {
+    margin: 0 0 7px;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    color: #52606d;
+}
+
+.budget-empty-message p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.55;
+
+    color: #8793a0;
+}
+
+
+/* ============================================================
+   Budget Responsive Layout
+   ============================================================ */
+
+@media (max-width: 1000px) {
+
+    .budget-form {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .budget-form-action {
+        grid-column: 1 / -1;
+    }
+
+    .budget-form-action .primary-button {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .budget-form {
+        grid-template-columns: 1fr;
+    }
+
+    .budget-form-action {
+        grid-column: auto;
+    }
+
+    .budget-details {
+        grid-template-columns: 1fr;
+    }
+
+    .budget-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .budget-actions {
+        justify-content: stretch;
+    }
+
+    .budget-actions .edit-button,
+    .budget-actions .delete-button {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .budget-page-header h1 {
+        font-size: 26px;
+    }
+
+    .budget-form-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .budget-item {
+        padding: 16px;
+        border-radius: 14px;
+    }
 }

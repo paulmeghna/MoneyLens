@@ -22,7 +22,11 @@
 
         <!-- Edit Budget Form -->
         <form method="POST" class="edit-budget-form">
-            {{ csrf_token() }}
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
 
             <div class="budget-form-group">
 

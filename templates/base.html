@@ -33,7 +33,14 @@
         <div class="site-brand">
 
             <a
-                href="{{ url_for('dashboard') }}"
+                href="{{
+                    url_for(
+                        'dashboard',
+                        view=session.get('dashboard_view', 'month'),
+                        month=session.get('dashboard_month'),
+                        year=session.get('dashboard_year')
+                    )
+                }}"
                 class="site-brand-link"
             >
 
@@ -118,7 +125,14 @@
             <!-- Dashboard -->
 
             <a
-                href="{{ url_for('dashboard') }}"
+                href="{{
+                    url_for(
+                        'dashboard',
+                        view=session.get('dashboard_view', 'month'),
+                        month=session.get('dashboard_month'),
+                        year=session.get('dashboard_year')
+                    )
+                }}"
                 class="{% if request.endpoint == 'dashboard' %}active{% endif %}"
                 {% if request.endpoint == 'dashboard' %}
                     aria-current="page"

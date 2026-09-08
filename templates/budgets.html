@@ -1,6 +1,6 @@
 ﻿{% extends "base.html" %}
 
-{% block title %}MoneyLens Budgets{% endblock %}
+{% block title %}Budgets - MoneyLens{% endblock %}
 
 {% block content %}
 
@@ -10,15 +10,24 @@
          Page Header
          ===================================================== -->
 
-    <div class="budget-page-header">
+    <header class="budget-page-header">
 
-        <h1>My Budgets</h1>
+        <div>
+            <p class="budget-eyebrow">
+                Money Planning
+            </p>
 
-        <p>
-            Plan your spending and keep track of your limits.
-        </p>
+            <h1>
+                My Budgets
+            </h1>
 
-    </div>
+            <p class="budget-page-description">
+                Set spending limits, monitor your progress,
+                and stay in control of your money.
+            </p>
+        </div>
+
+    </header>
 
 
     <!-- =====================================================
@@ -27,10 +36,34 @@
 
     <section class="budget-form-card">
 
-        <h2>Add New Budget</h2>
+        <div class="budget-card-heading">
 
-        <form method="POST">
-            {{ csrf_token() }}
+            <div>
+                <h2>
+                    Create a Budget
+                </h2>
+
+                <p>
+                    Set a monthly spending limit for a category.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="budget-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- Category -->
 
             <div class="budget-form-group">
 
@@ -38,16 +71,66 @@
                     Category
                 </label>
 
-                <input
+                <select
                     id="category"
-                    type="text"
                     name="category"
-                    placeholder="e.g. Food, Shopping"
                     required
                 >
 
+                    <option
+                        value=""
+                        selected
+                        disabled
+                    >
+                        Select category
+                    </option>
+
+                    <option value="Food">
+                        Food
+                    </option>
+
+                    <option value="Groceries">
+                        Groceries
+                    </option>
+
+                    <option value="Transport">
+                        Transport
+                    </option>
+
+                    <option value="Shopping">
+                        Shopping
+                    </option>
+
+                    <option value="Bills">
+                        Bills
+                    </option>
+
+                    <option value="Rent">
+                        Rent
+                    </option>
+
+                    <option value="Entertainment">
+                        Entertainment
+                    </option>
+
+                    <option value="Health">
+                        Health
+                    </option>
+
+                    <option value="Education">
+                        Education
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
             </div>
 
+
+            <!-- Month -->
 
             <div class="budget-form-group">
 
@@ -55,18 +138,39 @@
                     Month
                 </label>
 
-                <input
+                <select
                     id="month"
-                    type="number"
                     name="month"
-                    placeholder="1-12"
-                    min="1"
-                    max="12"
                     required
                 >
 
+                    <option
+                        value=""
+                        selected
+                        disabled
+                    >
+                        Select month
+                    </option>
+
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+
+                </select>
+
             </div>
 
+
+            <!-- Year -->
 
             <div class="budget-form-group">
 
@@ -78,13 +182,16 @@
                     id="year"
                     type="number"
                     name="year"
-                    placeholder="2026"
+                    value="2026"
                     min="2020"
+                    inputmode="numeric"
                     required
                 >
 
             </div>
 
+
+            <!-- Amount -->
 
             <div class="budget-form-group">
 
@@ -92,25 +199,38 @@
                     Budget Amount
                 </label>
 
-                <input
-                    id="amount"
-                    type="number"
-                    name="amount"
-                    placeholder="e.g. 2500"
-                    min="0.01"
-                    step="0.01"
-                    required
-                >
+                <div class="budget-money-input">
+
+                    <span aria-hidden="true">
+                        &#8377;
+                    </span>
+
+                    <input
+                        id="amount"
+                        type="number"
+                        name="amount"
+                        placeholder="e.g. 2500"
+                        min="0.01"
+                        step="0.01"
+                        inputmode="decimal"
+                        required
+                    >
+
+                </div>
 
             </div>
 
 
-            <button
-                type="submit"
-                class="primary-button"
-            >
-                Add Budget
-            </button>
+            <div class="budget-form-action">
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Add Budget
+                </button>
+
+            </div>
 
         </form>
 
@@ -125,7 +245,21 @@
 
         <div class="budget-list-header">
 
-            <h2>Your Budgets</h2>
+            <div>
+
+                <p class="budget-eyebrow">
+                    Overview
+                </p>
+
+                <h2>
+                    Your Budgets
+                </h2>
+
+                <p>
+                    Monitor spending against every budget you create.
+                </p>
+
+            </div>
 
         </div>
 
@@ -156,9 +290,7 @@
 
                     <article class="budget-item">
 
-                        <!-- =================================================
-                             Budget Header
-                             ================================================= -->
+                        <!-- Budget heading -->
 
                         <div class="budget-item-header">
 
@@ -167,7 +299,6 @@
                                 <h3>
                                     {{ budget.category }}
                                 </h3>
-
 
                                 <p class="budget-period">
 
@@ -204,18 +335,16 @@
                             </div>
 
 
-                            <!-- Budget Status -->
-
-                            <span class="budget-status {{ status_class }}">
+                            <span
+                                class="budget-status {{ status_class }}"
+                            >
                                 {{ budget.status }}
                             </span>
 
                         </div>
 
 
-                        <!-- =================================================
-                             Financial Information
-                             ================================================= -->
+                        <!-- Financial summary -->
 
                         <div class="budget-details">
 
@@ -226,7 +355,7 @@
                                 </span>
 
                                 <strong>
-                                    â‚¹{{ budget.amount }}
+                                    &#8377;{{ "{:,.2f}".format(budget.amount) }}
                                 </strong>
 
                             </div>
@@ -239,7 +368,7 @@
                                 </span>
 
                                 <strong>
-                                    â‚¹{{ budget.spent }}
+                                    &#8377;{{ "{:,.2f}".format(budget.spent) }}
                                 </strong>
 
                             </div>
@@ -252,7 +381,7 @@
                                 </span>
 
                                 <strong>
-                                    â‚¹{{ budget.remaining }}
+                                    &#8377;{{ "{:,.2f}".format(budget.remaining) }}
                                 </strong>
 
                             </div>
@@ -260,16 +389,14 @@
                         </div>
 
 
-                        <!-- =================================================
-                             Budget Usage Visualization
-                             ================================================= -->
+                        <!-- Usage -->
 
                         <div class="budget-progress">
 
                             <div class="budget-progress-label">
 
                                 <span>
-                                    Budget Usage
+                                    Budget used
                                 </span>
 
                                 <strong>
@@ -281,8 +408,9 @@
 
                             <progress
                                 class="budget-progress-bar {{ progress_class }}"
-                                value="{{ budget.utilization }}"
+                                value="{{ [budget.utilization, 100]|min }}"
                                 max="100"
+                                aria-label="Budget usage"
                             >
                                 {{ "%.0f"|format(budget.utilization) }}%
                             </progress>
@@ -290,14 +418,15 @@
                         </div>
 
 
-                        <!-- =================================================
-                             Budget Actions
-                             ================================================= -->
+                        <!-- Actions -->
 
                         <div class="budget-actions">
 
                             <a
-                                href="{{ url_for('edit_budget', budget_id=budget.id) }}"
+                                href="{{ url_for(
+                                    'edit_budget',
+                                    budget_id=budget.id
+                                ) }}"
                                 class="edit-button"
                             >
                                 Edit
@@ -306,13 +435,24 @@
 
                             <form
                                 method="POST"
-                                action="{{ url_for('delete_budget', budget_id=budget.id) }}"
+                                action="{{ url_for(
+                                    'delete_budget',
+                                    budget_id=budget.id
+                                ) }}"
                             >
-                            {{ csrf_token() }}
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
 
                                 <button
                                     type="submit"
                                     class="delete-button"
+                                    onclick="return confirm(
+                                        'Are you sure you want to delete this budget?'
+                                    );"
                                 >
                                     Delete
                                 </button>
@@ -330,20 +470,26 @@
 
         {% else %}
 
-            <!-- =================================================
-                 Empty State
-                 ================================================= -->
+            <!-- Empty state -->
 
-            <div class="empty-state">
+            <div class="budget-empty-state">
 
-                <h3>
-                    No budgets yet
-                </h3>
+                <div class="budget-empty-icon">
+                    $
+                </div>
 
-                <p>
-                    Create your first budget above to start
-                    tracking your spending.
-                </p>
+                <div class="budget-empty-message">
+
+                    <h3>
+                        No budgets yet
+                    </h3>
+
+                    <p>
+                        Create your first budget above to start
+                        planning and tracking your spending.
+                    </p>
+
+                </div>
 
             </div>
 

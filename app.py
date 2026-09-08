@@ -1,7 +1,7 @@
-
+import re
 from datetime import datetime
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_login import (
     LoginManager,
     login_user,
@@ -100,6 +100,10 @@ def register():
         if not email:
             return "Email is required.", 400
 
+        # Allow only properly formatted Gmail addresses.
+        if not re.fullmatch(r"[A-Za-z0-9._%+-]+@gmail\.com", email):
+            return "Please enter a valid Gmail address ending with @gmail.com.", 400
+
         if not password:
             return "Password is required.", 400
 
@@ -181,17 +185,55 @@ def home():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    view = request.args.get("view", "month")
-    month = request.args.get(
-        "month",
-        datetime.now().month,
-        type=int
-    )
-    year = request.args.get(
-        "year",
-        datetime.now().year,
-        type=int
-    )
+
+    # --------------------------------------------------------
+    # Restore the user's last dashboard view.
+    #
+    # Query parameters are used when the user submits
+    # the dashboard filter.
+    #
+    # The selected values are then stored in the session
+    # so they survive navigation to other pages.
+    # --------------------------------------------------------
+
+    if request.args:
+
+        view = request.args.get("view", "month")
+
+        month = request.args.get(
+            "month",
+            datetime.now().month,
+            type=int
+        )
+
+        year = request.args.get(
+            "year",
+            datetime.now().year,
+            type=int
+        )
+
+        # Store the selected dashboard state in this
+        # user's Flask session.
+        session["dashboard_view"] = view
+        session["dashboard_month"] = month
+        session["dashboard_year"] = year
+
+    else:
+
+        # Restore the previous dashboard state.
+        view = session.get(
+            "dashboard_view",
+            "month"
+        )
+
+        month = session.get(
+            "dashboard_month",
+            datetime.now().month
+        )
+        year = session.get(
+            "dashboard_year",
+            datetime.now().year
+        )
 
     # Validate the selected month only when Month view is used.
     if view == "month" and (month < 1 or month > 12):
@@ -651,7 +693,8 @@ def budgets():
             func.sum(Transaction.amount)
         ).filter(
             Transaction.user_id == current_user.id,
-            Transaction.category == budget.category,
+            func.lower(func.trim(Transaction.category))
+            == func.lower(func.trim(budget.category)),
             Transaction.type == "expense",
             extract("month", Transaction.date) == budget.month,
             extract("year", Transaction.date) == budget.year
