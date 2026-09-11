@@ -107,6 +107,18 @@ def register():
         if not password:
             return "Password is required.", 400
 
+        if (
+            len(password) < 8
+            or not re.search(r"[A-Z]", password)
+            or not re.search(r"[a-z]", password)
+            or not re.search(r"\d", password)
+        ):
+            return (
+                "Password must be at least 8 characters long and contain "
+                "an uppercase letter, a lowercase letter, and a number.",
+                400
+            )
+
         # Prevent duplicate email registration.
         existing_user = User.query.filter_by(email=email).first()
 
