@@ -2298,3 +2298,55 @@ button {
         border-radius: 14px;
     }
 }
+
+
+
+/* ============================================================
+   Error Pages
+   ============================================================ */
+
+.error-page {
+    min-height: calc(100vh - 110px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.error-card {
+    width: 100%;
+    max-width: 430px;
+
+    background-color: #fffdf5;
+
+    border: 1px solid #e3d9b8;
+    border-radius: 18px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);
+}
+
+.error-card h1 {
+    margin: 0 0 8px;
+
+    font-size: 48px;
+    color: #2e7d32;
+}
+
+.error-card h2 {
+    margin: 0 0 10px;
+
+    font-size: 22px;
+    color: #1f2933;
+}
+
+.error-card p {
+    margin: 0 0 20px;
+
+    color: #65727e;
+}

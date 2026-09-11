@@ -405,109 +405,55 @@
 
         </div>
 
+    {% endif %}
 
-        <!-- ==================================================
-             MONTHLY FINANCIAL BREAKDOWN
-             ================================================== -->
+    {% if view == "year" %}
 
-        <div class="analytics-section">
+    <div class="analytics-section">
 
-            <h2>
-                Monthly Financial Breakdown
-            </h2>
+        <h2>
+            Monthly Savings Rate
+        </h2>
 
-            <table>
+        <div class="chart-container">
 
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Month
-                        </th>
-
-                        <th>
-                            Income
-                        </th>
-
-                        <th>
-                            Expense
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    {% for item in monthly_breakdown %}
-
-                        <tr>
-
-                            <td>
-
-                                {% if item.month == 1 %}
-                                    January
-
-                                {% elif item.month == 2 %}
-                                    February
-
-                                {% elif item.month == 3 %}
-                                    March
-
-                                {% elif item.month == 4 %}
-                                    April
-
-                                {% elif item.month == 5 %}
-                                    May
-
-                                {% elif item.month == 6 %}
-                                    June
-
-                                {% elif item.month == 7 %}
-                                    July
-
-                                {% elif item.month == 8 %}
-                                    August
-
-                                {% elif item.month == 9 %}
-                                    September
-
-                                {% elif item.month == 10 %}
-                                    October
-
-                                {% elif item.month == 11 %}
-                                    November
-
-                                {% elif item.month == 12 %}
-                                    December
-
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-                                ₹{{ "{:,.2f}".format(item.income) }}
-                            </td>
-
-
-                            <td>
-                                ₹{{ "{:,.2f}".format(item.expense) }}
-                            </td>
-
-                        </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            <canvas
+                id="savingsRateChart"
+            ></canvas>
 
         </div>
 
-    {% endif %}
+    </div>
+
+{% else %}
+
+    <div class="analytics-section">
+
+        <h2>
+            Savings Rate
+        </h2>
+
+        <div class="savings-rate-display">
+
+            <strong>
+                {{ "%.2f"|format(savings_rate) }}%
+            </strong>
+
+            {% if view == "month" %}
+                <p>
+                    Savings rate for the selected month.
+                </p>
+            {% else %}
+                <p>
+                    Overall savings rate across all your transactions.
+                </p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endif %}
 
 
     <!-- ======================================================
@@ -543,7 +489,8 @@
         {
             "month": {{ item.month|tojson }},
             "income": {{ item.income|tojson }},
-            "expense": {{ item.expense|tojson }}
+            "expense": {{ item.expense|tojson }},
+            "savings_rate": {{ item.savings_rate|tojson }}
         }
 
         {% if not loop.last %},{% endif %}

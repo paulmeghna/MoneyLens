@@ -198,3 +198,113 @@ if (
         );
     }
 }
+
+
+/* ============================================================
+   Monthly Savings Rate Chart
+   ============================================================ */
+
+const savingsRateCanvas = document.getElementById(
+    "savingsRateChart"
+);
+
+if (
+    incomeExpenseDataElement &&
+    savingsRateCanvas
+) {
+    const chartData = JSON.parse(
+        incomeExpenseDataElement.textContent
+    );
+
+    if (chartData.length > 0) {
+
+        const monthNames = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        const labels = chartData.map(
+            item => monthNames[item.month - 1]
+        );
+
+        const savingsRateData = chartData.map(
+        item => item.savings_rate
+    );
+
+    console.table([...chartData]);
+
+        new Chart(
+            savingsRateCanvas,
+            {
+                type: "line",
+
+                data: {
+                    labels: labels,
+
+                    datasets: [ 
+                        {
+                            label: "Savings Rate",
+                            data: savingsRateData,
+
+                            tension: 0.3,
+
+                            fill: false
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            suggestedMin: -100,
+                            suggestedMax: 100,
+
+                            ticks: {
+                                callback: function (value) {
+                                    return value + "%";
+                                }
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+
+                            labels: {
+                                color: "#222",
+                                font: {
+                                    size: 14,
+                                    weight: "600"
+                                },
+                                padding: 16
+                            }
+                        },
+
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `Savings Rate: ${context.parsed.y.toFixed(2)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+}

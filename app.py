@@ -298,10 +298,21 @@ def dashboard():
                 func.sum(Transaction.amount)
             ).scalar() or 0
 
+            if monthly_income == 0 and monthly_expense == 0:
+                monthly_savings_rate = 0
+            elif monthly_income == 0:
+                monthly_savings_rate = -100
+            else:
+                monthly_savings_rate = (
+                    (monthly_income - monthly_expense)
+                    / monthly_income
+                ) * 100
+
             monthly_breakdown.append({
                 "month": selected_month,
                 "income": monthly_income,
-                "expense": monthly_expense
+                "expense": monthly_expense,
+                "savings_rate": monthly_savings_rate
             })
 
     # All Time view: no date filter is applied.
