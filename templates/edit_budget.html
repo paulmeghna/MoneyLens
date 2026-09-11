@@ -38,9 +38,28 @@
                     id="category"
                     type="text"
                     name="category"
+                    list="budget-category-options"
                     value="{{ budget.category }}"
+                    maxlength="50"
+                    placeholder="Select or enter a category"
+                    autocomplete="off"
                     required
                 >
+
+                <datalist id="budget-category-options">
+
+                    <option value="Food">
+                    <option value="Groceries">
+                    <option value="Transport">
+                    <option value="Shopping">
+                    <option value="Bills">
+                    <option value="Rent">
+                    <option value="Entertainment">
+                    <option value="Health">
+                    <option value="Education">
+                    <option value="Other">
+
+                </datalist>
 
             </div>
 
