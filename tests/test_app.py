@@ -52,7 +52,7 @@ def test_register_user(client):
         "/register",
         data={
             "name": "Test User",
-            "email": "test@example.com",
+            "email": "test@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -65,7 +65,7 @@ def test_duplicate_email_registration(client):
         "/register",
         data={
             "name": "First User",
-            "email": "same@example.com",
+            "email": "same@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -76,7 +76,7 @@ def test_duplicate_email_registration(client):
         "/register",
         data={
             "name": "Second User",
-            "email": "same@example.com",
+            "email": "same@gmail.com",
             "password": "TestPassword456",
         },
     )
@@ -90,7 +90,7 @@ def test_successful_login(client):
         "/register",
         data={
             "name": "Login User",
-            "email": "login@example.com",
+            "email": "login@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -98,7 +98,7 @@ def test_successful_login(client):
     response = client.post(
         "/login",
         data={
-            "email": "login@example.com",
+            "email": "login@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -112,7 +112,7 @@ def test_invalid_login(client):
         "/register",
         data={
             "name": "Login User",
-            "email": "wrong@example.com",
+            "email": "wrong@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -120,7 +120,7 @@ def test_invalid_login(client):
     response = client.post(
         "/login",
         data={
-            "email": "wrong@example.com",
+            "email": "wrong@gmail.com",
             "password": "WrongPassword",
         },
     )
@@ -134,7 +134,7 @@ def test_two_users_are_separate(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
@@ -143,7 +143,7 @@ def test_two_users_are_separate(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
@@ -159,13 +159,13 @@ def test_user_a_owns_transaction(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -195,13 +195,13 @@ def test_user_b_cannot_edit_user_a_transaction(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -226,13 +226,13 @@ def test_user_b_cannot_edit_user_a_transaction(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -250,13 +250,13 @@ def test_user_b_cannot_delete_user_a_transaction(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -281,13 +281,13 @@ def test_user_b_cannot_delete_user_a_transaction(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -306,13 +306,13 @@ def test_user_b_cannot_edit_user_a_budget(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -336,13 +336,13 @@ def test_user_b_cannot_edit_user_a_budget(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -360,13 +360,13 @@ def test_user_b_cannot_delete_user_a_budget(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -390,13 +390,13 @@ def test_user_b_cannot_delete_user_a_budget(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -415,13 +415,13 @@ def test_user_b_sees_only_own_transactions(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -444,13 +444,13 @@ def test_user_b_sees_only_own_transactions(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -467,13 +467,13 @@ def test_user_b_sees_only_own_budgets(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -495,13 +495,13 @@ def test_user_b_sees_only_own_budgets(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -518,13 +518,13 @@ def test_user_b_dashboard_does_not_show_user_a_data(client):
         "/register",
         data={
             "name": "User A",
-            "email": "usera@example.com",
+            "email": "usera@gmail.com",
             "password": "Password123",
         },
     )
 
     user_a = User.query.filter_by(
-        email="usera@example.com"
+        email="usera@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -547,13 +547,13 @@ def test_user_b_dashboard_does_not_show_user_a_data(client):
         "/register",
         data={
             "name": "User B",
-            "email": "userb@example.com",
+            "email": "userb@gmail.com",
             "password": "Password123",
         },
     )
 
     user_b = User.query.filter_by(
-        email="userb@example.com"
+        email="userb@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -571,13 +571,13 @@ def test_dashboard_calculations(client):
         "/register",
         data={
             "name": "Calculation User",
-            "email": "calc@example.com",
+            "email": "calc@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="calc@example.com"
+        email="calc@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -616,13 +616,13 @@ def test_dashboard_savings_rate(client):
         "/register",
         data={
             "name": "Savings User",
-            "email": "savings@example.com",
+            "email": "savings@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="savings@example.com"
+        email="savings@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -661,13 +661,13 @@ def test_duplicate_budget_rejected(client):
         "/register",
         data={
             "name": "Budget User",
-            "email": "budget@example.com",
+            "email": "budget@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="budget@example.com"
+        email="budget@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -704,13 +704,13 @@ def test_invalid_transaction_amount_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "validation@example.com",
+            "email": "validation@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="validation@example.com"
+        email="validation@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -736,13 +736,13 @@ def test_invalid_transaction_type_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "type@example.com",
+            "email": "type@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="type@example.com"
+        email="type@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -768,13 +768,13 @@ def test_invalid_transaction_date_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "date@example.com",
+            "email": "date@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="date@example.com"
+        email="date@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -800,13 +800,13 @@ def test_missing_transaction_category_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "category@example.com",
+            "email": "category@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="category@example.com"
+        email="category@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -832,13 +832,13 @@ def test_invalid_budget_amount_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "budgetamount@example.com",
+            "email": "budgetamount@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="budgetamount@example.com"
+        email="budgetamount@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -863,13 +863,13 @@ def test_invalid_budget_month_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "month@example.com",
+            "email": "month@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="month@example.com"
+        email="month@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -894,13 +894,13 @@ def test_invalid_budget_year_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "year@example.com",
+            "email": "year@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="year@example.com"
+        email="year@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -925,13 +925,13 @@ def test_missing_budget_category_rejected(client):
         "/register",
         data={
             "name": "Validation User",
-            "email": "budgetcategory@example.com",
+            "email": "budgetcategory@gmail.com",
             "password": "Password123",
         },
     )
 
     user = User.query.filter_by(
-        email="budgetcategory@example.com"
+        email="budgetcategory@gmail.com"
     ).first()
 
     with client.session_transaction() as session:
@@ -956,7 +956,7 @@ def test_register_rejects_missing_csrf_token(csrf_client):
         "/register",
         data={
             "name": "CSRF Test User",
-            "email": "csrf@example.com",
+            "email": "csrf@gmail.com",
             "password": "TestPassword123",
         },
     )
@@ -1055,6 +1055,8 @@ def test_delete_budget_rejects_missing_csrf_token(csrf_client):
 
 
 def test_custom_500_error_page(client):
+    client.application.config["PROPAGATE_EXCEPTIONS"] = False
+
     with client.application.test_request_context("/"):
         response = client.application.handle_exception(
             Exception("test error")
@@ -1062,3 +1064,5 @@ def test_custom_500_error_page(client):
 
     assert response.status_code == 500
     assert b"Something Went Wrong" in response.get_data()
+
+    client.application.config["PROPAGATE_EXCEPTIONS"] = None
