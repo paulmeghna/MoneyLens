@@ -79,11 +79,6 @@ def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 
-# Create database tables if they do not already exist.
-with app.app_context():
-    db.create_all()
-
-
 # ------------------------------------------------------------
 # Authentication routes
 # ------------------------------------------------------------
