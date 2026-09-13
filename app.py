@@ -3,6 +3,8 @@ import re
 from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session
+from urllib.parse import urlparse
+
 from flask_login import (
     LoginManager,
     login_user,
@@ -161,10 +163,16 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
 
-            # Return the user to the page they originally requested,
-            # or to the home page if there was no protected page.
-            return redirect(request.args.get("next") or "/dashboard")
+            next_url = request.args.get("next")
 
+            if next_url:
+                parsed_url = urlparse(next_url)
+
+                if parsed_url.scheme or parsed_url.netloc:
+                    next_url = None
+
+            return redirect(next_url or "/dashboard")
+        
         return render_template(
             "message.html",
             title="Login failed",
@@ -175,7 +183,7 @@ def login():
     return render_template("login.html")
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 @login_required
 def logout():
     logout_user()

@@ -256,12 +256,23 @@
                         </button>
 
 
-                        <a
-                            href="{{ url_for('logout') }}"
-                            class="logout-confirm-button"
+                        <form
+                            method="POST"
+                            action="{{ url_for('logout') }}"
                         >
-                            Log Out
-                        </a>
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="logout-confirm-button"
+                            >
+                                Log Out
+                            </button>
+                        </form>
 
                     </div>
 
