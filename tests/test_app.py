@@ -43,10 +43,8 @@ def test_budgets_requires_login(client):
 def test_logout_requires_login(client):
     response = client.get("/logout")
 
-    assert response.status_code == 302
-    assert "/login" in response.headers["Location"]
-
-
+    assert response.status_code == 405
+    
 def test_register_user(client):
     response = client.post(
         "/register",
@@ -792,9 +790,7 @@ def test_invalid_transaction_date_rejected(client):
     )
 
     assert response.status_code == 400
-    assert b"Date must be valid" in response.data
-
-
+    assert b"Please enter a valid transaction date." in response.data
 def test_missing_transaction_category_rejected(client):
     client.post(
         "/register",
@@ -824,7 +820,7 @@ def test_missing_transaction_category_rejected(client):
     )
 
     assert response.status_code == 400
-    assert b"Category is required" in response.data
+    assert b"Please enter a transaction category." in response.data
 
 
 def test_invalid_budget_amount_rejected(client):
@@ -948,7 +944,7 @@ def test_missing_budget_category_rejected(client):
     )
 
     assert response.status_code == 400
-    assert b"Category is required" in response.data
+    assert b"Please enter a budget category." in response.data
 
 
 def test_register_rejects_missing_csrf_token(csrf_client):

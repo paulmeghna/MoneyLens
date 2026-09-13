@@ -94,30 +94,50 @@ def register():
 
         # Validate required fields.
         if not name:
-            return "Name is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Registration failed",
+                message="Please enter your name.",
+                back_url="/register"
+            ), 400
         if not email:
-            return "Email is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Registration failed",
+                message="Please enter your email address.",
+                back_url="/register"
+            ), 400
         # Allow only properly formatted Gmail addresses.
         if not re.fullmatch(r"[A-Za-z0-9._%+-]+@gmail\.com", email):
-            return "Please enter a valid Gmail address ending with @gmail.com.", 400
-
+            if not re.fullmatch(r"[A-Za-z0-9._%+-]+@gmail\.com", email):
+                return render_template(
+                    "message.html",
+                    title="Registration failed",
+                    message="Please enter a valid Gmail address ending with @gmail.com.",
+                    back_url="/register"
+                ), 400
         if not password:
-            return "Password is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Registration failed",
+                message="Please enter your password.",
+                back_url="/register"
+            ), 400
         if (
             len(password) < 8
             or not re.search(r"[A-Z]", password)
             or not re.search(r"[a-z]", password)
             or not re.search(r"\d", password)
         ):
-            return (
-                "Password must be at least 8 characters long and contain "
-                "an uppercase letter, a lowercase letter, and a number.",
-                400
-            )
-
+            return render_template(
+                "message.html",
+                title="Registration failed",
+                message=(
+                    "Password must be at least 8 characters long and contain "
+                    "an uppercase letter, a lowercase letter, and a number."
+                ),
+                back_url="/register"
+            ), 400     
         # Prevent duplicate email registration.
         existing_user = User.query.filter_by(email=email).first()
 
@@ -254,12 +274,20 @@ def dashboard():
 
     # Validate the selected month only when Month view is used.
     if view == "month" and (month < 1 or month > 12):
-        return "Month must be between 1 and 12.", 400
-
+        return render_template(
+            "message.html",
+            title="Dashboard filter failed",
+            message="Month must be between 1 and 12.",
+            back_url="/dashboard"
+        ), 400
     # Validate the selected year for Month and Year views.
     if view in ("month", "year") and year < 2020:
-        return "Year must be 2020 or later.", 400
-
+        return render_template(
+            "message.html",
+            title="Dashboard filter failed",
+            message="Year must be 2020 or later.",
+            back_url="/dashboard"
+        ), 400
     # This list will contain the 12-month breakdown for Year view.
     monthly_breakdown = []
 
@@ -335,11 +363,14 @@ def dashboard():
     # All Time view: no date filter is applied.
     elif view == "all":
         pass
-
     # Reject unsupported dashboard views.
     else:
-        return "Invalid dashboard view.", 400
-
+        return render_template(
+        "message.html",
+        title="Dashboard filter failed",
+        message="The selected dashboard view is invalid.",
+        back_url="/dashboard"
+    ), 400
     # --------------------------------------------------------
     # Basic financial calculations.
     # --------------------------------------------------------
@@ -457,22 +488,34 @@ def transactions():
                 "Transaction type must be income or expense.",
                 400
             )
-
         # Category is required.
         if not category:
-            return "Category is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Please enter a transaction category.",
+                back_url="/transactions"
+            ), 400
         # Validate the transaction amount.
         try:
             amount = float(
                 request.form.get("amount", "")
             )
         except (ValueError, TypeError):
-            return "Amount must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction failed",
+                message="Please enter a valid transaction amount.",
+                back_url="/transactions"
+            ), 400
         if amount <= 0:
-            return "Amount must be greater than 0.", 400
-
+             return render_template(
+                "message.html",
+                title="Transaction failed",
+                message="Transaction amount must be greater than 0.",
+                back_url="/transactions"
+            ), 400
+        
         # Validate the transaction date.
         try:
             transaction_date = datetime.strptime(
@@ -480,8 +523,12 @@ def transactions():
                 "%Y-%m-%d"
             ).date()
         except (ValueError, TypeError):
-            return "Date must be valid.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction failed",
+                message="Please enter a valid transaction date.",
+                back_url="/transactions"
+            ), 400
         # Create the transaction for the currently
         # logged-in user.
         transaction = Transaction(
@@ -527,10 +574,13 @@ def edit_transaction(transaction_id):
         id=transaction_id,
         user_id=current_user.id
     ).first()
-
     if transaction is None:
-        return "Transaction not found.", 404
-
+        return render_template(
+            "message.html",
+            title="Transaction not found",
+            message="The transaction could not be found or you do not have access to it.",
+            back_url="/transactions"
+        ), 404
     if request.method == "POST":
         transaction_type = request.form.get(
             "type",
@@ -546,29 +596,41 @@ def edit_transaction(transaction_id):
             "description",
             ""
         ).strip()
-
         # Validate transaction type.
         if transaction_type not in ("income", "expense"):
-            return (
-                "Transaction type must be income or expense.",
-                400
-            )
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Transaction type must be income or expense.",
+                back_url="/transactions"
+            ), 400
         # Category is required.
         if not category:
-            return "Category is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Please enter a transaction category.",
+                back_url="/transactions"
+            ), 400
         # Validate the transaction amount.
         try:
             amount = float(
                 request.form.get("amount", "")
             )
         except (ValueError, TypeError):
-            return "Amount must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Please enter a valid transaction amount.",
+                back_url="/transactions"
+            ), 400
         if amount <= 0:
-            return "Amount must be greater than 0.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Transaction amount must be greater than 0.",
+                back_url="/transactions"
+            ), 400
         # Validate the transaction date.
         try:
             transaction_date = datetime.strptime(
@@ -576,8 +638,12 @@ def edit_transaction(transaction_id):
                 "%Y-%m-%d"
             ).date()
         except (ValueError, TypeError):
-            return "Date must be valid.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Please enter a valid transaction date.",
+                back_url="/transactions"
+            ), 400
         # Update the existing transaction.
         transaction.type = transaction_type
         transaction.amount = amount
@@ -609,10 +675,13 @@ def delete_transaction(transaction_id):
         id=transaction_id,
         user_id=current_user.id
     ).first()
-
     if transaction is None:
-        return "Transaction not found.", 404
-
+        return render_template(
+            "message.html",
+            title="Transaction not found",
+            message="The transaction could not be found or you do not have access to it.",
+            back_url="/transactions"
+        ), 404
     db.session.delete(transaction)
     db.session.commit()
 
@@ -631,44 +700,71 @@ def budgets():
             "category",
             ""
         ).strip()
-
         # Validate category.
         if not category:
-            return "Category is required.", 400
-
+             return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Please enter a budget category.",
+                back_url="/budgets"
+            ), 400
         # Validate month.
         try:
             month = int(
                 request.form.get("month", "")
             )
         except (ValueError, TypeError):
-            return "Month must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Please enter a valid month.",
+                back_url="/budgets"
+            ), 400
         if month < 1 or month > 12:
-            return "Month must be between 1 and 12.", 400
-
+             return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Month must be between 1 and 12.",
+                back_url="/budgets"
+            ), 400
         # Validate year.
         try:
             year = int(
                 request.form.get("year", "")
             )
         except (ValueError, TypeError):
-            return "Year must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Please enter a valid year.",
+                back_url="/budgets"
+            ), 400
         if year < 2020:
-            return "Year must be 2020 or later.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Year must be 2020 or later.",
+                back_url="/budgets"
+            ), 400
         # Validate budget amount.
         try:
             amount = float(
                 request.form.get("amount", "")
             )
         except (ValueError, TypeError):
-            return "Amount must be a valid number.", 400
-
+             return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Please enter a valid budget amount.",
+                back_url="/budgets"
+            ), 400   
         if amount <= 0:
-            return "Amount must be greater than 0.", 400
-
+             return render_template(
+                "message.html",
+                title="Budget creation failed",
+                message="Budget amount must be greater than 0.",
+                back_url="/budgets"
+            ), 400
         # Create a budget belonging to the logged-in user.
         budget = Budget(
             user_id=current_user.id,
@@ -770,8 +866,12 @@ def edit_budget(budget_id):
     ).first()
 
     if budget is None:
-        return "Budget not found.", 404
-
+        return render_template(
+            "message.html",
+            title="Budget not found",
+            message="The budget could not be found or you do not have access to it.",
+            back_url="/budgets"
+        ), 404
     if request.method == "POST":
         category = request.form.get(
             "category",
@@ -780,41 +880,69 @@ def edit_budget(budget_id):
 
         # Validate category.
         if not category:
-            return "Category is required.", 400
-
+            return render_template(
+                "message.html",
+                title="Transaction update failed",
+                message="Please enter a transaction category.",
+                back_url="/transactions"
+            ), 400       
         # Validate month.
         try:
             month = int(
                 request.form.get("month", "")
             )
         except (ValueError, TypeError):
-            return "Month must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Please enter a valid month.",
+                back_url="/budgets"
+            ), 400
         if month < 1 or month > 12:
-            return "Month must be between 1 and 12.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Month must be between 1 and 12.",
+                back_url="/budgets"
+            ), 400
         # Validate year.
         try:
             year = int(
                 request.form.get("year", "")
             )
         except (ValueError, TypeError):
-            return "Year must be a valid number.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Please enter a valid year.",
+                back_url="/budgets"
+            ), 400
         if year < 2020:
-            return "Year must be 2020 or later.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Year must be 2020 or later.",
+                back_url="/budgets"
+            ), 400
         # Validate budget amount.
         try:
             amount = float(
                 request.form.get("amount", "")
             )
         except (ValueError, TypeError):
-            return "Amount must be a valid number.", 400
-
+           return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Please enter a valid budget amount.",
+                back_url="/budgets"
+            ), 400      
         if amount <= 0:
-            return "Amount must be greater than 0.", 400
-
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message="Budget amount must be greater than 0.",
+                back_url="/budgets"
+            ), 400
         # Update the existing budget.
         budget.category = category
         budget.month = month
@@ -828,12 +956,15 @@ def edit_budget(budget_id):
             # Roll back the failed update so the SQLAlchemy
             # session remains usable.
             db.session.rollback()
-
-            return (
-                "A budget already exists for this category, "
-                "month, and year."
+            return render_template(
+                "message.html",
+                title="Budget update failed",
+                message=(
+                    "A budget already exists for this category, "
+                    "month, and year."
+                ),
+                back_url="/budgets"
             ), 400
-
         return redirect("/budgets")
 
     return render_template(
@@ -855,8 +986,12 @@ def delete_budget(budget_id):
     ).first()
 
     if budget is None:
-        return "Budget not found.", 404
-
+        return render_template(
+            "message.html",
+            title="Budget not found",
+            message="The budget could not be found or you do not have access to it.",
+            back_url="/budgets"
+        ), 404
     db.session.delete(budget)
     db.session.commit()
 
