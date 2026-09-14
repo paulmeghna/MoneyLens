@@ -1234,6 +1234,14 @@ button {
     color: #65727e;
 }
 
+.message-content {
+    text-align: center;
+}
+
+.message-content h2 {
+    margin-bottom: 10px;
+}
+
 .auth-button {
     width: 100%;
     margin-top: 5px;
