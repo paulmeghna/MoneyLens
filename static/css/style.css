@@ -2512,3 +2512,17 @@ button {
     outline: 2px solid #2e7d32;
     outline-offset: 2px;
 }
+
+/* =========================================================
+   Global Footer
+   ========================================================= */
+
+.site-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding: 20px 16px;
+}
+
+.site-footer p {
+    margin: 4px 0;
+}
