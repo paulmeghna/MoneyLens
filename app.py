@@ -109,8 +109,7 @@ def register():
             ), 400
         # Allow only properly formatted Gmail addresses.
         if not re.fullmatch(r"[A-Za-z0-9._%+-]+@gmail\.com", email):
-            if not re.fullmatch(r"[A-Za-z0-9._%+-]+@gmail\.com", email):
-                return render_template(
+               return render_template(
                     "message.html",
                     title="Registration failed",
                     message="Please enter a valid Gmail address ending with @gmail.com.",
@@ -385,7 +384,6 @@ def dashboard():
     total_expense = expense_query.with_entities(
         func.sum(Transaction.amount)
     ).scalar() or 0
-
     # Balance is income minus expense.
     balance = total_income - total_expense
 
@@ -481,18 +479,20 @@ def transactions():
             "description",
             ""
         ).strip()
-
+        
         # Only income and expense transactions are allowed.
         if transaction_type not in ("income", "expense"):
-            return (
-                "Transaction type must be income or expense.",
-                400
-            )
+            return render_template(
+                "message.html",
+                title="Transaction failed",
+                message="Transaction type must be income or expense.",
+                back_url="/transactions"
+            ), 400
         # Category is required.
         if not category:
             return render_template(
                 "message.html",
-                title="Transaction update failed",
+                title="Transaction creation failed",
                 message="Please enter a transaction category.",
                 back_url="/transactions"
             ), 400
@@ -509,13 +509,12 @@ def transactions():
                 back_url="/transactions"
             ), 400
         if amount <= 0:
-             return render_template(
+            return render_template(
                 "message.html",
                 title="Transaction failed",
                 message="Transaction amount must be greater than 0.",
                 back_url="/transactions"
-            ), 400
-        
+            ),400 
         # Validate the transaction date.
         try:
             transaction_date = datetime.strptime(

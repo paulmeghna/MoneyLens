@@ -10,7 +10,6 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-
     background-color: #eaf4ff;
     color: #222;
 }
@@ -861,6 +860,125 @@ button {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+
+/* ============================================================
+   Account Area
+   ============================================================ */
+
+.account-area {
+    position: relative;
+}
+
+.account-name {
+    display: flex;
+    align-items: center;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    background-color: transparent;
+    border: none;
+
+    color: #2e7d32;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    list-style: none;
+}
+
+.account-name:hover {
+    background-color: #e8f1ea;
+}
+
+.account-area[open] .account-name {
+    background-color: #2e7d32;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.account-name::-webkit-details-marker {
+    display: none;
+}
+
+.account-name::after {
+    content: "⌄";
+    margin-left: 6px;
+    font-size: 12px;
+}
+
+.account-name::-webkit-details-marker {
+    display: none;
+}
+
+.account-name::after {
+    content: "⌄";
+    margin-left: 6px;
+    font-size: 12px;
+}
+
+.account-name::-webkit-details-marker {
+    display: none;
+}
+
+.account-name::after {
+    content: "⌄";
+
+    margin-left: 8px;
+
+    font-size: 13px;
+}
+
+.account-panel {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: 240px;
+
+    padding: 16px;
+
+    background-color: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+
+    box-shadow: 0 8px 20px rgba(31, 41, 51, 0.12);
+
+    z-index: 100;
+}
+
+.account-panel-title {
+    margin: 0 0 10px;
+
+    color: #2e7d32;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.account-panel-name {
+    margin: 0 0 4px;
+
+    color: #1f2933;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.account-panel-email {
+    margin: 0;
+
+    color: #66727e;
+
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
 }
 
 .site-navigation a {
@@ -2349,4 +2467,48 @@ button {
     margin: 0 0 20px;
 
     color: #65727e;
+}
+
+/* ============================================================
+   Password Visibility Toggle
+   ============================================================ */
+
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 72px;
+}
+
+.password-toggle {
+    position: absolute;
+
+    top: 50%;
+    right: 10px;
+
+    transform: translateY(-50%);
+
+    padding: 5px 8px;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: transparent;
+    color: #2e7d32;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    background-color: #e8f1ea;
+    color: #256628;
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid #2e7d32;
+    outline-offset: 2px;
 }

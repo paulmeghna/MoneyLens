@@ -166,6 +166,37 @@
             >
                 Budgets
             </a>
+            <!-- =================================================
+                Account
+                ================================================= -->
+
+            {% if current_user.is_authenticated %}
+
+                <details class="account-area">
+
+                    <summary class="account-name">
+                        Account
+                    </summary>
+
+                    <div class="account-panel">
+
+                        <p class="account-panel-title">
+                            Account
+                        </p>
+
+                        <p class="account-panel-name">
+                            {{ current_user.name }}
+                        </p>
+
+                        <p class="account-panel-email">
+                            {{ current_user.email }}
+                        </p>
+
+                    </div>
+
+                </details>
+
+            {% endif %}
 
 
             <!-- =================================================

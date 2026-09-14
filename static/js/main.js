@@ -172,7 +172,18 @@ if (
 
                     plugins: {
                         legend: {
-                            position: "bottom"
+                            position: "bottom",
+
+                            labels: {
+                                color: "#222",
+
+                                font: {
+                                    size: 14,
+                                    weight: "600"
+                                },
+
+                                padding: 16
+                            }
                         },
 
                         tooltip: {
@@ -307,4 +318,49 @@ if (
             }
         );
     }
+}
+
+
+/* ============================================================
+   Password Visibility Toggle
+   ============================================================ */
+
+const passwordInput = document.getElementById(
+    "password"
+);
+
+const passwordToggle = document.getElementById(
+    "passwordToggle"
+);
+
+if (
+    passwordInput &&
+    passwordToggle
+) {
+    passwordToggle.addEventListener(
+        "click",
+        function () {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+                passwordToggle.textContent = "Hide";
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            } else {
+
+                passwordInput.type = "password";
+                passwordToggle.textContent = "Show";
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+
+        }
+    );
 }

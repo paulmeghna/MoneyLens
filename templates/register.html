@@ -79,6 +79,7 @@
 
 
         <form method="POST">
+
             <input
                 type="hidden"
                 name="csrf_token"
@@ -126,18 +127,28 @@
                 <label for="password">
                     Password
                 </label>
+                <div class="password-field">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        required
+                    >
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Create a password"
-                    autocomplete="new-password"
-                    required
-                >
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="passwordToggle"
+                        aria-label="Show password"
+                    >
+                        Show
+                    </button>
+
+                </div>
 
             </div>
-
 
             <button
                 type="submit"
