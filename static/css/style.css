@@ -1157,13 +1157,17 @@ button {
 /* ============================================================
    Authentication Page
    ============================================================ */
-
+   
 .auth-page {
-    min-height: calc(100vh - 110px);
-
     display: flex;
     align-items: center;
     justify-content: center;
+
+    padding: 10px 0 0;
+}
+
+.message-page {
+    padding: 10px 0 0;
 }
 
 .auth-card {
@@ -1252,13 +1256,6 @@ button {
    Logout Page
    ============================================================ */
 
-.logout-page {
-    min-height: calc(100vh - 110px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
 
 .logout-card {
     width: 100%;
@@ -1540,6 +1537,10 @@ button {
 
     body {
         padding: 12px;
+    }
+    .auth-page {
+        min-height: auto;
+        padding: 20px 0;
     }
 
 
@@ -2432,13 +2433,11 @@ button {
    ============================================================ */
 
 .error-page {
-    min-height: calc(100vh - 110px);
-
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 20px;
+    padding: 10px 0 0;
 }
 
 .error-card {

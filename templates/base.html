@@ -128,8 +128,10 @@
             aria-label="Main navigation"
         >
 
+            {% if current_user.is_authenticated %}
+            
             <!-- Dashboard -->
-
+             
             <a
                 href="{{
                     url_for(
@@ -173,6 +175,7 @@
                 Budgets
             </a>
 
+            {% endif %}
 
             <!-- =================================================
                 Account
@@ -211,13 +214,13 @@
                 Logout Confirmation
                 ================================================= -->
 
-            {% if current_user.is_authenticated %}
+             {% if current_user.is_authenticated %}
 
-            <details class="logout-menu">
+                <details class="logout-menu">
 
-                <summary>
-                    Logout
-                </summary>
+                    <summary>
+                        Logout
+                    </summary>
 
 
                     <div
