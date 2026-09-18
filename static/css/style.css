@@ -1256,6 +1256,15 @@ button {
    Logout Page
    ============================================================ */
 
+.logout-page {
+    min-height: calc(100vh - 280px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 0;
+}
 
 .logout-card {
     width: 100%;
@@ -2533,3 +2542,4 @@ button {
 .site-footer p {
     margin: 4px 0;
 }
+
