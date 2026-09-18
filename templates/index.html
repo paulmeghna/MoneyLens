@@ -75,25 +75,25 @@
         <p class="auth-subtitle">
             Track your income, expenses, budgets, and financial progress
             in one simple place.
+
         </p>
 
 
         <a
-            href="{{ url_for('login') }}"
-            class="primary-button auth-button"
-            style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;"
-        >
-            Login
-        </a>
-
-
-        <a
             href="{{ url_for('register') }}"
-            class="edit-budget-cancel"
-            style="display: flex; margin-top: 10px;"
+            class="primary-button auth-button"
+            style="display: flex; align-items: center; justify-content: center; text-decoration: none; margin-top: 10px;"
         >
             Create an Account
         </a>
+
+
+        <p class="auth-subtitle" style="margin-top: 14px; margin-bottom: 0;">
+            Already have an account?
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
+        </p>
 
     </div>
 

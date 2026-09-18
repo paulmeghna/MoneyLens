@@ -18,6 +18,7 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}"
     >
+
     <link
         rel="icon"
         type="image/png"
@@ -171,6 +172,8 @@
             >
                 Budgets
             </a>
+
+
             <!-- =================================================
                 Account
                 ================================================= -->
@@ -205,8 +208,10 @@
 
 
             <!-- =================================================
-                 Logout Confirmation
-                 ================================================= -->
+                Logout Confirmation
+                ================================================= -->
+
+            {% if current_user.is_authenticated %}
 
             <details class="logout-menu">
 
@@ -215,106 +220,110 @@
                 </summary>
 
 
-                <div
-                    class="logout-confirmation"
-                    role="dialog"
-                    aria-label="Logout confirmation"
-                >
+                    <div
+                        class="logout-confirmation"
+                        role="dialog"
+                        aria-label="Logout confirmation"
+                    >
 
-                    <div class="logout-confirmation-logo">
+                        <div class="logout-confirmation-logo">
 
-                        <svg
-                            viewBox="0 0 64 64"
-                            role="img"
-                            aria-hidden="true"
-                        >
-
-                            <circle
-                                cx="29"
-                                cy="29"
-                                r="20"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="5"
-                            />
-
-                            <circle
-                                cx="29"
-                                cy="29"
-                                r="10"
-                                fill="currentColor"
-                                opacity="0.18"
-                            />
-
-                            <path
-                                d="M18 35 L26 27 L32 32 L43 20"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="4"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-
-                            <path
-                                d="M37 20 H43 V26"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="4"
-                                stroke-linecap="round"
-                            />
-
-                        </svg>
-
-                    </div>
-
-
-                    <div class="logout-confirmation-content">
-
-                        <h2>
-                            Log out of MoneyLens?
-                        </h2>
-
-                        <p>
-                            Your current session will be ended.
-                        </p>
-
-                    </div>
-
-
-                    <div class="logout-confirmation-actions">
-
-                        <button
-                            type="button"
-                            class="logout-cancel"
-                            onclick="this.closest('details').removeAttribute('open')"
-                        >
-                            Cancel
-                        </button>
-
-
-                        <form
-                            method="POST"
-                            action="{{ url_for('logout') }}"
-                        >
-                            <input
-                                type="hidden"
-                                name="csrf_token"
-                                value="{{ csrf_token() }}"
+                            <svg
+                                viewBox="0 0 64 64"
+                                role="img"
+                                aria-hidden="true"
                             >
+
+                                <circle
+                                    cx="29"
+                                    cy="29"
+                                    r="20"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="5"
+                                />
+
+                                <circle
+                                    cx="29"
+                                    cy="29"
+                                    r="10"
+                                    fill="currentColor"
+                                    opacity="0.18"
+                                />
+
+                                <path
+                                    d="M18 35 L26 27 L32 32 L43 20"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+
+                                <path
+                                    d="M37 20 H43 V26"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                    stroke-linecap="round"
+                                />
+
+                            </svg>
+
+                        </div>
+
+
+                        <div class="logout-confirmation-content">
+
+                            <h2>
+                                Log out of MoneyLens?
+                            </h2>
+
+                            <p>
+                                Your current session will be ended.
+                            </p>
+
+                        </div>
+
+
+                        <div class="logout-confirmation-actions">
 
                             <button
-                                type="submit"
-                                class="logout-confirm-button"
+                                type="button"
+                                class="logout-cancel"
+                                onclick="this.closest('details').removeAttribute('open')"
                             >
-                                Log Out
+                                Cancel
                             </button>
-                        </form>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('logout') }}"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="logout-confirm-button"
+                                >
+                                    Log Out
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </div>
 
-                </div>
+                </details>
 
-            </details>
+            {% endif %}
 
         </nav>
 
@@ -333,8 +342,8 @@
 
 
     <!-- =========================================================
-        Footer
-        ========================================================= -->
+         Footer
+         ========================================================= -->
 
     <footer class="site-footer">
 
@@ -347,6 +356,7 @@
         </p>
 
     </footer>
+
 
     <!-- =========================================================
          Main JavaScript
